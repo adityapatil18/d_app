@@ -1,7 +1,10 @@
 import 'package:d_app/utils/constant.dart';
 import 'package:d_app/view/custom_widgets/custom_gradientButton.dart';
 import 'package:d_app/view/custom_widgets/dateSelection_container.dart';
+import 'package:d_app/view/custom_widgets/text_field.dart';
 import 'package:d_app/view/custom_widgets/text_widget.dart';
+import 'package:d_app/view/screens/given_entry_screen.dart';
+import 'package:d_app/view/screens/recieved_entry_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -19,39 +22,31 @@ class _SerachScreenState extends State<SerachScreen> {
     fontWeight: FontWeight.bold, // Customize the font weight
   );
   TextEditingController _searchController = TextEditingController();
+
   var Loader;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != DateTime.now()) {
-      setState(() {
-        selectedDate = DateFormat('dd/MM/yy').format(picked);
-      });
-    }
-  }
-
-  void _showGivenPopup() {
+  void _recivedPopUp() {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return Container(
-          height: MediaQuery.sizeOf(context).height / 2,
-          width: MediaQuery.sizeOf(context).width,
-          child: CustomDateSelectionContainer(
-              selectedDate: selectedDate,
-              containerColor: MyAppColor.greyColor,
-              textColor: MyAppColor.grey3Color,
-              onTap: () {
-                _selectDate(context);
-              },
-              iconColor: MyAppColor.grey3Color),
-        );
+            height: MediaQuery.sizeOf(context).height / 1.8,
+            width: MediaQuery.sizeOf(context).width,
+            child: RecivedEntryScreen());
+      },
+    );
+  }
+
+  void _givenPopUp() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height / 1.8,
+            child: GivenEntryScreen());
       },
     );
   }
@@ -61,26 +56,24 @@ class _SerachScreenState extends State<SerachScreen> {
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
-          automaticallyImplyLeading: false,
-          leading: Image.asset('images/back_arrow.png'),
+          leading: Image.asset(
+            'images/back_arrow.png',
+          ),
           leadingWidth: 40,
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Image.asset('images/forward_arrow.png', width: 40),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: IconButton(
+                onPressed: () {},
+                icon: Image.asset('images/forward_arrow.png', width: 40),
+              ),
             ),
           ],
           backgroundColor: Colors.white,
           centerTitle: true,
           title: CustomDateSelectionContainer(
-            containerColor: Colors.grey.shade300,
-            selectedDate: selectedDate,
-            textColor: MyAppColor.mainBlueColor,
-            iconColor: MyAppColor.mainBlueColor,
-            onTap: () {
-              _selectDate(context);
-            },
-          )),
+              textColor: MyAppColor.mainBlueColor,
+              iconColor: MyAppColor.mainBlueColor)),
       backgroundColor: Colors.white,
       body: Column(
         children: [
@@ -129,7 +122,7 @@ class _SerachScreenState extends State<SerachScreen> {
                               text: 'Closing Balance',
                               textcolor: MyAppColor.textClor,
                               textsize: 12,
-                              textweight: FontWeight.w600)
+                              textweight: FontWeight.w600),
                         ],
                       ),
                     ],
@@ -219,82 +212,82 @@ class _SerachScreenState extends State<SerachScreen> {
                       ],
                     ),
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        height: 50,
-                        width: MediaQuery.sizeOf(context).width,
-                        color:
-                            index.isEven ? MyAppColor.grey2Color : Colors.white,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: TextWidget(
-                                        text: selectedDate,
-                                        textcolor: MyAppColor.textClor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600),
-                                  ),
-                                  VerticalDivider(
-                                    color: Colors.black,
-                                    thickness: 2,
-                                    width: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: TextWidget(
-                                        text: 'Adesh',
-                                        textcolor: MyAppColor.textClor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600),
-                                  ),
-                                  VerticalDivider(
-                                    color: Colors.black,
-                                    thickness: 2,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: TextWidget(
-                                        text: '+10000',
-                                        textcolor: MyAppColor.greenColor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600),
-                                  ),
-                                  VerticalDivider(
-                                    color: Colors.black,
-                                    thickness: 2,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: TextWidget(
-                                        text: '-5000',
-                                        textcolor: MyAppColor.redColor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
+                  Expanded(
+                    child: ListView.builder(
+                      // shrinkWrap: true,
+                      itemCount: 8,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          height: 50,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: index.isEven
+                              ? MyAppColor.grey2Color
+                              : Colors.white,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: TextWidget(
+                                          text: selectedDate,
+                                          textcolor: MyAppColor.textClor,
+                                          textsize: 12,
+                                          textweight: FontWeight.w600),
+                                    ),
+                                    VerticalDivider(
+                                      color: Colors.black,
+                                      thickness: 1,
+                                      width: 10,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: TextWidget(
+                                          text: 'Adesh',
+                                          textcolor: MyAppColor.textClor,
+                                          textsize: 12,
+                                          textweight: FontWeight.w600),
+                                    ),
+                                    VerticalDivider(
+                                      color: Colors.black,
+                                      thickness: 1,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: TextWidget(
+                                          text: '+10000',
+                                          textcolor: MyAppColor.greenColor,
+                                          textsize: 12,
+                                          textweight: FontWeight.w600),
+                                    ),
+                                    VerticalDivider(
+                                      color: Colors.black,
+                                      thickness: 1,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: TextWidget(
+                                          text: '-5000',
+                                          textcolor: MyAppColor.redColor,
+                                          textsize: 12,
+                                          textweight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   )
                 ],
               ),
             ),
-          ),
-          SizedBox(
-            height: 25,
           ),
         ],
       ),
@@ -307,14 +300,16 @@ class _SerachScreenState extends State<SerachScreen> {
           children: [
             CustomGradientButton(
               onPressed: () {
-                _showGivenPopup();
+                _recivedPopUp();
               },
               buttonText: 'Recived',
               containerColor: Color(0xFFF0D963),
               gradientColors: [Color(0xFF1F9540), Color(0xFF61CC7F)],
             ),
             CustomGradientButton(
-              onPressed: () {},
+              onPressed: () {
+                _givenPopUp();
+              },
               buttonText: 'Given',
               containerColor: Color(0xFFF0D963),
               gradientColors: [Color(0xFFD60000), Color(0xFFFF6E05)],

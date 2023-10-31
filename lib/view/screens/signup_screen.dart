@@ -8,6 +8,8 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _userNameController = TextEditingController();
+    TextEditingController _passwordController = TextEditingController();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -21,6 +23,7 @@ class SignupScreen extends StatelessWidget {
                 'images/img.png',
                 width: 218,
                 height: 234,
+                fit: BoxFit.contain,
               ),
               SizedBox(
                 height: 30,
@@ -34,6 +37,7 @@ class SignupScreen extends StatelessWidget {
                 height: 10,
               ),
               TextField(
+                controller: _userNameController,
                 decoration: InputDecoration(
                   hintText: 'Username',
                 ),
@@ -42,6 +46,7 @@ class SignupScreen extends StatelessWidget {
                 height: 20,
               ),
               TextField(
+                controller: _passwordController,
                 decoration: InputDecoration(hintText: 'Password'),
               ),
               SizedBox(
