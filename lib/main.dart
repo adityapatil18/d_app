@@ -1,6 +1,9 @@
 import 'package:d_app/view/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+SharedPreferences? _sharedPreferences;
 
 void main() {
   runApp(DAPP());

@@ -1,15 +1,110 @@
+import 'dart:convert';
+
 import 'package:d_app/utils/constant.dart';
 import 'package:d_app/view/custom_widgets/text_widget.dart';
 import 'package:d_app/view/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
-class SignupScreen extends StatelessWidget {
+import '../../utils/shared_functions.dart';
+
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  @override
   Widget build(BuildContext context) {
     TextEditingController _userNameController = TextEditingController();
+
     TextEditingController _passwordController = TextEditingController();
+
+    @override
+    void initState() {
+      super.initState();
+      // Retrieve user ID from SharedPreferences, if available
+      SharedPreferencesHelper.getUserId().then((userId) {
+        if (userId != null) {
+          // Navigate to HomeScreen as the user is already logged in
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+          );
+        }
+      });
+    }
+
+    // void login(String email, password) async {
+    //   try {
+    //     Response response = await post(
+    //         Uri.parse('https://appapi.techgigs.in/api/user/login'),
+    //         body: {"email": email, "password": password});
+
+    //     if (response.statusCode == 200) {
+    //       var data = jsonDecode(response.body.toString());
+    //       print('API response:${response.body}');
+    //       print(data);
+    //       print(data['_id']);
+    //       print('login successfully');
+    //       Navigator.push(
+    //           context,
+    //           MaterialPageRoute(
+    //             builder: (context) => HomeScreen(),
+    //           ));
+    //     } else {
+    //       print('Failed');
+    //     }
+    //   } catch (e) {
+    //     print(e.toString());
+    //   }
+    // }
+
+    Future<void> login(String email, String password) async {
+      try {
+        Response response = await post(
+          Uri.parse('https://appapi.techgigs.in/api/user/login'),
+          body: {"email": email, "password": password},
+        );
+
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body.toString());
+          print('API response: ${response.body}');
+          print(data['data']['_id']);
+
+          print(data);
+          final userId = data['data']['_id']; // Corrected
+
+          // Save the user ID in SharedPreferences when login is successful
+          SharedPreferencesHelper.saveUserId(userId);
+
+          print('User ID: $userId');
+          print('Login successfully');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text('Login failed. Please check your credentials.')),
+          );
+          print('Failed');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An error occurred. Please try again later.')),
+        );
+        print(e.toString());
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -61,11 +156,17 @@ class SignupScreen extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all(
                           MyAppColor.loginButtonColor)),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreen(),
-                        ));
+                    final email = _userNameController.text.toString();
+                    final password = _passwordController.text.toString();
+
+                    if (email.isNotEmpty && password.isNotEmpty) {
+                      login(email, password);
+                    } else {
+                      // Show an error message if fields are empty
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please fill in both fields.')),
+                      );
+                    }
                   },
                   child: TextWidget(
                       text: 'LOGIN',

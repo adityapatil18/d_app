@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:d_app/utils/shared_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 
 import '../../utils/constant.dart';
 import '../custom_widgets/dateSelection_container.dart';
@@ -16,6 +20,30 @@ class RecivedEntryScreen extends StatefulWidget {
 class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   TextEditingController _receivedNameController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
+  
+
+  void recivedEntry(var fromUserId, var toUserId,var amount) async {
+    try {
+      Response response = await post(
+          Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
+          body: {
+            "fromUser": fromUserId,
+            "toUser":toUserId,
+            "amount": amount,
+          });
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        print(data);
+        print('API response:${response.body}');
+        print('data entry successfully done');
+      } else {
+        print('failed');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,16 +119,21 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        alignment: Alignment.center,
-        height: 70,
-        width: MediaQuery.sizeOf(context).width,
-        color: MyAppColor.mainBlueColor,
-        child: TextWidget(
-            text: 'Add Entry',
-            textcolor: Colors.white,
-            textsize: 16,
-            textweight: FontWeight.w600),
+      bottomNavigationBar: GestureDetector(
+        child: Container(
+          alignment: Alignment.center,
+          height: 70,
+          width: MediaQuery.sizeOf(context).width,
+          color: MyAppColor.mainBlueColor,
+          child: TextWidget(
+              text: 'Add Entry',
+              textcolor: Colors.white,
+              textsize: 16,
+              textweight: FontWeight.w600),
+        ),
+        onTap: () {
+          
+        },
       ),
     );
   }

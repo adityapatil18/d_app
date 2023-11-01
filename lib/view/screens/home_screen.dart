@@ -1,4 +1,6 @@
 import 'package:d_app/utils/constant.dart';
+import 'package:d_app/view/custom_widgets/custom_container.dart';
+import 'package:d_app/view/custom_widgets/text_widget.dart';
 import 'package:d_app/view/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,28 +17,23 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(
-                child: Container(
-                  width: 131,
-                  height: 115,
-                  color: MyAppColor.greyColor,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SerachScreen(),
-                      ));
-                },
-              ),
+              CustomContainer(
+                  imagePath: 'images/1.png',
+                  text: 'Add Entry',
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SerachScreen(),
+                        ));
+                  }),
               SizedBox(
                 width: 20,
               ),
-              Container(
-                width: 131,
-                height: 115,
-                color: MyAppColor.greyColor,
-              ),
+              CustomContainer(
+                  imagePath: 'images/2.png',
+                  text: 'Search by Name',
+                  onTap: () {})
             ],
           ),
           SizedBox(
@@ -45,23 +42,19 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 131,
-                height: 115,
-                color: MyAppColor.greyColor,
-              ),
+              CustomContainer(
+                  imagePath: 'images/3.png',
+                  text: 'Search by Date',
+                  onTap: () {}),
               SizedBox(
                 width: 20,
               ),
-              Container(
-                width: 131,
-                height: 115,
-                color: MyAppColor.greyColor,
-              ),
+              CustomContainer(
+                  imagePath: 'images/4.png', text: 'List All', onTap: () {})
             ],
           ),
           SizedBox(
-            height: 90,
+            height: 100,
           ),
           Image.asset(
             'images/power.png',
