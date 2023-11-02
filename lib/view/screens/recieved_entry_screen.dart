@@ -20,29 +20,6 @@ class RecivedEntryScreen extends StatefulWidget {
 class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   TextEditingController _receivedNameController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
-  
-
-  void recivedEntry(var fromUserId, var toUserId,var amount) async {
-    try {
-      Response response = await post(
-          Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
-          body: {
-            "fromUser": fromUserId,
-            "toUser":toUserId,
-            "amount": amount,
-          });
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body.toString());
-        print(data);
-        print('API response:${response.body}');
-        print('data entry successfully done');
-      } else {
-        print('failed');
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,47 +50,68 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
             SizedBox(
               height: 50,
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget(
-                      text: 'Name of  Person',
-                      textcolor: MyAppColor.textClor,
-                      textsize: 14,
-                      textweight: FontWeight.w600),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                      hintText: 'Enter Name',
-                      controller: _receivedNameController,
-                      keyboardType: TextInputType.text,
+            
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextWidget(
+                        text: 'First name',
+                        textcolor: MyAppColor.textClor,
+                        textsize: 14,
+                        textweight: FontWeight.w600),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                        hintText: 'Enter First Name',
+                        controller: _receivedNameController,
+                        keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.singleLineFormatter
+                        ]),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextWidget(
+                        text: 'Last name',
+                        textcolor: MyAppColor.textClor,
+                        textsize: 14,
+                        textweight: FontWeight.w600),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                        hintText: 'Enter Last Name',
+                        controller: _receivedNameController,
+                        keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.singleLineFormatter
+                        ]),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextWidget(
+                        text: 'Amount',
+                        textcolor: MyAppColor.textClor,
+                        textsize: 14,
+                        textweight: FontWeight.w600),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                      hintText: 'Enter Amount',
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
                       inputFormatters: [
-                        FilteringTextInputFormatter.singleLineFormatter
-                      ]),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextWidget(
-                      text: 'Amount',
-                      textcolor: MyAppColor.textClor,
-                      textsize: 14,
-                      textweight: FontWeight.w600),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                    hintText: 'Enter Amount',
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      CommaSeparatorInputFormatter(),
-                    ],
-                  )
-                ],
+                        FilteringTextInputFormatter.digitsOnly,
+                        CommaSeparatorInputFormatter(),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ],
@@ -131,9 +129,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
               textsize: 16,
               textweight: FontWeight.w600),
         ),
-        onTap: () {
-          
-        },
+        onTap: () {},
       ),
     );
   }

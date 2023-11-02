@@ -26,72 +26,70 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
         width: 30,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 40,
+      body: Column(
+        children: [
+          SizedBox(
+            height: 40,
+          ),
+          TextWidget(
+              text: 'GIVEN ENTRY',
+              textcolor: MyAppColor.redColor,
+              textsize: 22,
+              textweight: FontWeight.w700),
+          SizedBox(
+            height: 20,
+          ),
+          CustomDateSelectionContainer(
+              textColor: MyAppColor.grey3Color,
+              iconColor: MyAppColor.grey3Color),
+          SizedBox(
+            height: 50,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextWidget(
+                    text: 'Name of  Person',
+                    textcolor: MyAppColor.textClor,
+                    textsize: 14,
+                    textweight: FontWeight.w600),
+                SizedBox(
+                  height: 5,
+                ),
+                CustomTextField(
+                  hintText: 'Enter Name',
+                  controller: _givenNameController,
+                  keyboardType: TextInputType.text,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.singleLineFormatter
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextWidget(
+                    text: 'Amount',
+                    textcolor: MyAppColor.textClor,
+                    textsize: 14,
+                    textweight: FontWeight.w600),
+                SizedBox(
+                  height: 5,
+                ),
+                CustomTextField(
+                  hintText: 'Enter Amount',
+                  controller: _givenAmountController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CommaSeparatorInputFormatter(),
+                  ],
+                )
+              ],
             ),
-            TextWidget(
-                text: 'GIVEN ENTRY',
-                textcolor: MyAppColor.redColor,
-                textsize: 22,
-                textweight: FontWeight.w700),
-            SizedBox(
-              height: 20,
-            ),
-            CustomDateSelectionContainer(
-                textColor: MyAppColor.grey3Color,
-                iconColor: MyAppColor.grey3Color),
-            SizedBox(
-              height: 50,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget(
-                      text: 'Name of  Person',
-                      textcolor: MyAppColor.textClor,
-                      textsize: 14,
-                      textweight: FontWeight.w600),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                    hintText: 'Enter Name',
-                    controller: _givenNameController,
-                    keyboardType: TextInputType.text,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.singleLineFormatter
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextWidget(
-                      text: 'Amount',
-                      textcolor: MyAppColor.textClor,
-                      textsize: 14,
-                      textweight: FontWeight.w600),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                    hintText: 'Enter Amount',
-                    controller: _givenAmountController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      CommaSeparatorInputFormatter(),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: Container(
         alignment: Alignment.center,

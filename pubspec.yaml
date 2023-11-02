@@ -40,6 +40,8 @@ dependencies:
   flutter_multi_formatter: ^2.11.16
   http: ^1.1.0
   shared_preferences: ^2.2.2
+  android_intent_plus: ^4.0.3
+  url_launcher: ^6.2.1
 
 dev_dependencies:
   flutter_test:

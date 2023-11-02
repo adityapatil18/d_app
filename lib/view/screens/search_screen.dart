@@ -27,14 +27,13 @@ class _SerachScreenState extends State<SerachScreen> {
 
   var Loader;
 
-
   void _recivedPopUp() {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return Container(
-            height: MediaQuery.sizeOf(context).height / 1.8,
+            height: MediaQuery.sizeOf(context).height / 1.5,
             width: MediaQuery.sizeOf(context).width,
             child: RecivedEntryScreen());
       },
