@@ -47,7 +47,7 @@ class _SerachScreenState extends State<SerachScreen> {
       builder: (context) {
         return Container(
             width: MediaQuery.sizeOf(context).width,
-            height: MediaQuery.sizeOf(context).height / 1.8,
+            height: MediaQuery.sizeOf(context).height / 1.5,
             child: GivenEntryScreen());
       },
     );
@@ -160,22 +160,6 @@ class _SerachScreenState extends State<SerachScreen> {
                         ),
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          // prefixIcon: IconButton(
-                          //   icon: Icon(
-                          //     Icons.search,
-                          //     color: Colors.black.withOpacity(0.54),
-                          //   ),
-                          //   onPressed: () {},
-                          // ),
-                          // suffixIcon: GestureDetector(
-                          //   onTap: () {
-                          //     _searchController.text = "";
-                          //   },
-                          //   child: Icon(
-                          //     Icons.clear,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
                           hintText: "  Search by name, or amount",
                           hintStyle: new TextStyle(
                             color: Colors.black.withOpacity(0.54),

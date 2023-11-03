@@ -18,9 +18,11 @@ class RecivedEntryScreen extends StatefulWidget {
 }
 
 class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
-  TextEditingController _receivedNameController = TextEditingController();
+  TextEditingController _receivedFirstNameController = TextEditingController();
+  TextEditingController _receivedLastNameController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
-
+  TextEditingController _searchNameController = TextEditingController();
+  String _selectedOption = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,49 +49,189 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
             CustomDateSelectionContainer(
                 textColor: MyAppColor.grey3Color,
                 iconColor: MyAppColor.grey3Color),
-            SizedBox(
-              height: 50,
+            Row(
+              children: [
+                Row(
+                  children: [
+                    Radio(
+                      value: "New Entry",
+                      groupValue: _selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedOption = value!;
+                        });
+                      },
+                    ),
+                    Text(
+                      'New Entry',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF202020)),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Radio(
+                      value: "Old Entry",
+                      groupValue: _selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedOption = value!;
+                        });
+                      },
+                    ),
+                    Text(
+                      'Old Entry',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF202020)),
+                    ),
+                  ],
+                ),
+                // Container(
+                //   width: 200,
+                //   height: 30,
+                //   child: RadioListTile(
+                //     title: Text('old'),
+                //     value: 'old',
+                //     groupValue: _selectedOption,
+                //     onChanged: (value) {},
+                //   ),
+                // ),
+                // Container(
+                //   width: 200,
+                //   height: 30,
+                //   child: RadioListTile(
+                //     title: Text('old'),
+                //     value: 'old',
+                //     groupValue: _selectedOption,
+                //     onChanged: (value) {},
+                //   ),
+                // )
+              ],
             ),
-            
-            Container(
+            Visibility(
+              visible: _selectedOption == "New Entry",
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget(
+                                  text: 'First name',
+                                  textcolor: MyAppColor.textClor,
+                                  textsize: 14,
+                                  textweight: FontWeight.w600),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              CustomTextField(
+                                  hintText: 'Enter First Name',
+                                  controller: _receivedFirstNameController,
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .singleLineFormatter
+                                  ]),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              TextWidget(
+                                  text: 'Last name',
+                                  textcolor: MyAppColor.textClor,
+                                  textsize: 14,
+                                  textweight: FontWeight.w600),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              CustomTextField(
+                                  hintText: 'Enter Last Name',
+                                  controller: _receivedLastNameController,
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .singleLineFormatter
+                                  ]),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              TextWidget(
+                                  text: 'Amount',
+                                  textcolor: MyAppColor.textClor,
+                                  textsize: 14,
+                                  textweight: FontWeight.w600),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              CustomTextField(
+                                hintText: 'Enter Amount',
+                                controller: _amountController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  CommaSeparatorInputFormatter(),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: _selectedOption == "Old Entry",
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextWidget(
-                        text: 'First name',
-                        textcolor: MyAppColor.textClor,
-                        textsize: 14,
-                        textweight: FontWeight.w600),
-                    SizedBox(
-                      height: 5,
+                    Container(
+                      margin: EdgeInsets.only(top: 15, bottom: 15),
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: TextField(
+                        textInputAction: TextInputAction.search,
+                        controller: _searchNameController,
+                        onSubmitted: (value) {
+                          setState(() {
+                            var Loader = true;
+                          });
+                        },
+                        keyboardType: TextInputType.name,
+                        style: new TextStyle(
+                          color: Colors.black,
+                        ),
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search_sharp),
+                          border: InputBorder.none,
+                          hintText: "Search by name",
+                          hintStyle: new TextStyle(
+                            color: Colors.black.withOpacity(0.54),
+                          ),
+                        ),
+                      ),
                     ),
-                    CustomTextField(
-                        hintText: 'Enter First Name',
-                        controller: _receivedNameController,
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.singleLineFormatter
-                        ]),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TextWidget(
-                        text: 'Last name',
-                        textcolor: MyAppColor.textClor,
-                        textsize: 14,
-                        textweight: FontWeight.w600),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    CustomTextField(
-                        hintText: 'Enter Last Name',
-                        controller: _receivedNameController,
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.singleLineFormatter
-                        ]),
                     SizedBox(
                       height: 15,
                     ),

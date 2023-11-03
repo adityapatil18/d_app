@@ -24,19 +24,19 @@ class _CustomDateSelectionContainerState
     fontWeight: FontWeight.bold, // Customize the font weight
   );
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != DateTime.now()) {
-      setState(() {
-        selectedDate = DateFormat('dd/MM/yy').format(picked);
-      });
-    }
-  }
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null && picked != DateTime.now()) {
+  //     setState(() {
+  //       selectedDate = DateFormat('dd/MM/yy').format(picked);
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +54,9 @@ class _CustomDateSelectionContainerState
         children: [
           GestureDetector(
             onTap: () {
-              setState(() {
-                _selectDate(context);
-              });
+              // setState(() {
+              //   _selectDate(context);
+              // });
             },
             child: Row(
               children: [
