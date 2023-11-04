@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:d_app/utils/shared_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
+import '../../model/recived_entry_model.dart';
 import '../../utils/constant.dart';
 import '../custom_widgets/dateSelection_container.dart';
 import '../custom_widgets/text_field.dart';
@@ -23,6 +23,31 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   TextEditingController _amountController = TextEditingController();
   TextEditingController _searchNameController = TextEditingController();
   String _selectedOption = "";
+
+  Future<REntry> createEntry(
+      String firstName, String lastName, String amount) async {
+    final response = await http.post(
+      Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "firstName": firstName,
+        "lastName": lastName,
+        "amount": amount,
+        "type": "credit",
+        "status": "1",
+        "Id": "",
+      }),
+    );
+    print('api response:${response.body}');
+    if (response.statusCode == 200) {
+      return REntry.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to create entry.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,26 +116,6 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                     ),
                   ],
                 ),
-                // Container(
-                //   width: 200,
-                //   height: 30,
-                //   child: RadioListTile(
-                //     title: Text('old'),
-                //     value: 'old',
-                //     groupValue: _selectedOption,
-                //     onChanged: (value) {},
-                //   ),
-                // ),
-                // Container(
-                //   width: 200,
-                //   height: 30,
-                //   child: RadioListTile(
-                //     title: Text('old'),
-                //     value: 'old',
-                //     groupValue: _selectedOption,
-                //     onChanged: (value) {},
-                //   ),
-                // )
               ],
             ),
             Visibility(
@@ -173,14 +178,16 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                               SizedBox(
                                 height: 5,
                               ),
-                              CustomTextField(
-                                hintText: 'Enter Amount',
+                              TextField(
                                 controller: _amountController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  CommaSeparatorInputFormatter(),
-                                ],
+                                decoration: InputDecoration(
+                                    hintText: 'Enter Amount',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10))),
                               )
                             ],
                           ),
@@ -215,7 +222,6 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                         controller: _searchNameController,
                         onSubmitted: (value) {
                           setState(() {
-                            var Loader = true;
                           });
                         },
                         keyboardType: TextInputType.name,
@@ -243,14 +249,15 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    CustomTextField(
-                      hintText: 'Enter Amount',
+                    TextField(
                       controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        CommaSeparatorInputFormatter(),
-                      ],
+                      decoration: InputDecoration(
+                          hintText: 'Enter Amount',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
                     )
                   ],
                 ),
@@ -271,7 +278,43 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
               textsize: 16,
               textweight: FontWeight.w600),
         ),
-        onTap: () {},
+        onTap: () {
+          // setState(() {
+          //   createEntry(_receivedFirstNameController.text,
+          //       _receivedLastNameController.text, _amountController.text);
+          // });
+          final firstName = _receivedFirstNameController.text;
+          final lastName = _receivedLastNameController.text;
+          final amount = _amountController.text;
+
+          // Check if required fields are not empty
+          if (firstName.isNotEmpty &&
+              lastName.isNotEmpty &&
+              amount.isNotEmpty) {
+            // You can set the "status" based on the selected option here
+            String status;
+            if (_selectedOption == "New Entry") {
+              status = "1";
+            } else if (_selectedOption == "Old Entry") {
+              status = "0";
+            } else {
+              // Provide a default value if no valid option is selected
+              status = "0";
+            }
+
+            // Call the createEntry function to post the data
+            createEntry(
+              firstName,
+              lastName,
+              amount,
+            );
+          } else {
+            // Show an error message if any of the required fields are empty
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Please fill in all required fields.')),
+            );
+          }
+        },
       ),
     );
   }

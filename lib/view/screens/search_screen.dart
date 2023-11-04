@@ -270,7 +270,7 @@ class _SerachScreenState extends State<SerachScreen> {
                         );
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

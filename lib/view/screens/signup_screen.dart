@@ -39,35 +39,12 @@ class _SignupScreenState extends State<SignupScreen> {
       });
     }
 
-    // void login(String email, password) async {
-    //   try {
-    //     Response response = await post(
-    //         Uri.parse('https://appapi.techgigs.in/api/user/login'),
-    //         body: {"email": email, "password": password});
-
-    //     if (response.statusCode == 200) {
-    //       var data = jsonDecode(response.body.toString());
-    //       print('API response:${response.body}');
-    //       print(data);
-    //       print(data['_id']);
-    //       print('login successfully');
-    //       Navigator.push(
-    //           context,
-    //           MaterialPageRoute(
-    //             builder: (context) => HomeScreen(),
-    //           ));
-    //     } else {
-    //       print('Failed');
-    //     }
-    //   } catch (e) {
-    //     print(e.toString());
-    //   }
-    // }
+    
 
     Future<void> login(String email, String password) async {
       try {
         Response response = await post(
-          Uri.parse('https://appapi.techgigs.in/api/user/login'),
+          Uri.parse('https://appapi.techgigs.in/api/admin/login'),
           body: {"email": email, "password": password},
         );
 
