@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../model/all_data.dart';
 import '../../model/given_entry_model.dart';
 import '../../utils/constant.dart';
 import '../custom_widgets/dateSelection_container.dart';
@@ -23,6 +24,13 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
   TextEditingController _givenAmountController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
   String _selectedOption = "";
+  List<Datum> allData = []; // List of data obtained from API
+  List<String> searchResults = [];
+  @override
+  void initState() {
+    super.initState();
+    fetchData(""); // Fetch data from the API when the screen loads
+  }
 
   Future<GEntry> createEntry(
       String firstName, String lastName, String amount) async {
@@ -46,6 +54,38 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     } else {
       throw Exception('Failed to create entry.');
     }
+  }
+
+  Future<void> fetchData(String name) async {
+    final response = await http.get(
+      Uri.parse(
+          'https://appapi.techgigs.in/api/user/list?userName=$name'), // Replace with the actual API endpoint
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final allDataList =
+          List<Datum>.from(jsonData['data'].map((x) => Datum.fromJson(x)));
+      setState(() {
+        allData = allDataList;
+      });
+    } else {
+      throw Exception('Failed to fetch data.');
+    }
+  }
+
+  List<String> searchNames(String query) {
+    query = query.toLowerCase();
+    List<String> matchingNames = [];
+
+    for (Datum datum in allData) {
+      String fullName = datum.fullName.toLowerCase();
+      if (fullName.contains(query)) {
+        matchingNames.add(datum.fullName);
+      }
+    }
+
+    return matchingNames;
   }
 
   @override
@@ -205,40 +245,40 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 15, bottom: 15),
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: TextField(
-                        textInputAction: TextInputAction.search,
-                        controller: _searchController,
-                        onSubmitted: (value) {
-                          setState(() {
-                            var Loader = true;
-                          });
-                        },
-                        keyboardType: TextInputType.name,
-                        style: new TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search_sharp),
-                          border: InputBorder.none,
-                          hintText: "Search by name",
-                          hintStyle: new TextStyle(
-                            color: Colors.black.withOpacity(0.54),
-                          ),
-                        ),
-                      ),
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: 'Search by name',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      controller: _givenLastNameController,
+                      keyboardType: TextInputType.text,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.singleLineFormatter
+                      ],
+                      onChanged: (query) {
+                        searchResults = searchNames(query);
+                      },
                     ),
+                    if (searchResults.isNotEmpty)
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: searchResults.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: ListTile(
+                              title: Text(searchResults[index]),
+                              onTap: () {
+                                // Handle the selection of the name here
+                                _searchController.text = searchResults[index];
+                                // Clear the search results and hide the ListView
+                                setState(() {
+                                  searchResults.clear();
+                                });
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     SizedBox(
                       height: 15,
                     ),
