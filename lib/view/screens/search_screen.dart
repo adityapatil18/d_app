@@ -99,7 +99,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600),
                           ),
-                          TextWidget(
+                          const TextWidget(
                               text: 'Opening Balance',
                               textcolor: MyAppColor.textClor,
                               textsize: 12,
@@ -120,7 +120,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600),
                           ),
-                          TextWidget(
+                          const TextWidget(
                               text: 'Closing Balance',
                               textcolor: MyAppColor.textClor,
                               textsize: 12,
@@ -175,22 +175,22 @@ class _SerachScreenState extends State<SerachScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        TextWidget(
+                        const TextWidget(
                             text: 'Date  ',
                             textcolor: Colors.white,
                             textsize: 12,
                             textweight: FontWeight.w600),
-                        TextWidget(
+                        const TextWidget(
                             text: 'Name',
                             textcolor: Colors.white,
                             textsize: 12,
                             textweight: FontWeight.w600),
-                        TextWidget(
+                        const TextWidget(
                             text: 'Received',
                             textcolor: Colors.white,
                             textsize: 12,
                             textweight: FontWeight.w600),
-                        TextWidget(
+                        const TextWidget(
                             text: 'Given',
                             textcolor: Colors.white,
                             textsize: 12,
@@ -201,7 +201,7 @@ class _SerachScreenState extends State<SerachScreen> {
                   Expanded(
                     child: ListView.builder(
                       // shrinkWrap: true,
-                      itemCount: 8,
+                      itemCount: 20,
                       itemBuilder: (context, index) {
                         return Container(
                           height: 50,

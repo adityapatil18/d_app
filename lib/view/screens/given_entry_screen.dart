@@ -25,7 +25,10 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
   TextEditingController _searchController = TextEditingController();
   String _selectedOption = "";
   List<Datum> allData = []; // List of data obtained from API
-  List<String> searchResults = [];
+  List<Datum> searchResults = [];
+  String selectedUserId = ''; // Variable to hold the selected user's ID
+  String selectedName = ""; // Store the selected name
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +59,35 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     }
   }
 
+  Future<GEntry> oldEntry(
+      {String selectedName = "",
+      String amount = "",
+      String selectedId = ""}) async {
+    final response = await http.post(
+        Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          "firstName": selectedName,
+          "lastName": "",
+          "amount": amount,
+          "type": "debit",
+          "status": "0",
+          "Id": selectedId,
+        }));
+    print(amount);
+    print(selectedId);
+    print(selectedName);
+    print('api response: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return GEntry.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to create entry.');
+    }
+  }
+
   Future<void> fetchData(String name) async {
     final response = await http.get(
       Uri.parse(
@@ -74,18 +106,26 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     }
   }
 
-  List<String> searchNames(String query) {
+  List<Datum> searchNames(String query) {
     query = query.toLowerCase();
-    List<String> matchingNames = [];
+    List<Datum> matchingNames = [];
 
     for (Datum datum in allData) {
       String fullName = datum.fullName.toLowerCase();
       if (fullName.contains(query)) {
-        matchingNames.add(datum.fullName);
+        matchingNames.add(datum);
       }
     }
 
     return matchingNames;
+  }
+
+  void selectName(String fullName, String userId) {
+    setState(() {
+      _searchController.text = fullName;
+      searchResults.clear(); // Clear the search results
+      selectedUserId = userId; // Store the selected user's ID
+    });
   }
 
   @override
@@ -103,7 +143,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
             SizedBox(
               height: 40,
             ),
-            TextWidget(
+            const TextWidget(
                 text: 'RECEIVED ENTRY',
                 textcolor: MyAppColor.greenColor,
                 textsize: 22,
@@ -127,13 +167,11 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                         });
                       },
                     ),
-                    Text(
-                      'New Entry',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF202020)),
-                    ),
+                    const TextWidget(
+                        text: 'New Entry',
+                        textcolor: MyAppColor.textClor,
+                        textsize: 13,
+                        textweight: FontWeight.w400)
                   ],
                 ),
                 Row(
@@ -147,12 +185,11 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                         });
                       },
                     ),
-                    Text(
-                      'Old Entry',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF202020)),
+                    const TextWidget(
+                      text: 'Old Entry',
+                      textcolor: MyAppColor.textClor,
+                      textsize: 13,
+                      textweight: FontWeight.w400,
                     ),
                   ],
                 ),
@@ -172,7 +209,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextWidget(
+                              const TextWidget(
                                   text: 'First name',
                                   textcolor: MyAppColor.textClor,
                                   textsize: 14,
@@ -191,7 +228,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              TextWidget(
+                              const TextWidget(
                                   text: 'Last name',
                                   textcolor: MyAppColor.textClor,
                                   textsize: 14,
@@ -210,7 +247,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              TextWidget(
+                              const TextWidget(
                                   text: 'Amount',
                                   textcolor: MyAppColor.textClor,
                                   textsize: 14,
@@ -266,12 +303,15 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                         itemBuilder: (context, index) {
                           return Card(
                             child: ListTile(
-                              title: Text(searchResults[index]),
+                              title: Text(searchResults[index].fullName),
                               onTap: () {
                                 // Handle the selection of the name here
-                                _searchController.text = searchResults[index];
+                                _searchController.text =
+                                    searchResults[index].fullName;
                                 // Clear the search results and hide the ListView
                                 setState(() {
+                                  selectedName = searchResults[index].fullName;
+                                  selectedUserId = searchResults[index].id;
                                   searchResults.clear();
                                 });
                               },
@@ -280,9 +320,9 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                         },
                       ),
                     SizedBox(
-                      height: 15,
+                      height: 100,
                     ),
-                    TextWidget(
+                    const TextWidget(
                         text: 'Amount',
                         textcolor: MyAppColor.textClor,
                         textsize: 14,
@@ -290,14 +330,14 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    CustomTextField(
-                      hintText: 'Enter Amount',
+                    TextField(
                       controller: _givenAmountController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        CommaSeparatorInputFormatter(),
-                      ],
+                      decoration: InputDecoration(
+                          hintText: 'Enter amount',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
                     )
                   ],
                 ),
@@ -312,7 +352,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           height: 70,
           width: MediaQuery.sizeOf(context).width,
           color: MyAppColor.mainBlueColor,
-          child: TextWidget(
+          child: const TextWidget(
               text: 'Add Entry',
               textcolor: Colors.white,
               textsize: 16,
@@ -323,36 +363,65 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           //   createEntry(_receivedFirstNameController.text,
           //       _receivedLastNameController.text, _amountController.text);
           // });
+          // final firstName = _givenFirstNameController.text;
+          // final lastName = _givenLastNameController.text;
+          // final amount = _givenAmountController.text;
+
+          // // Check if required fields are not empty
+          // if (firstName.isNotEmpty &&
+          //     lastName.isNotEmpty &&
+          //     amount.isNotEmpty) {
+          //   // You can set the "status" based on the selected option here
+          //   String status;
+          //   if (_selectedOption == "New Entry") {
+          //     status = "1";
+          //   } else if (_selectedOption == "Old Entry") {
+          //     status = "0";
+          //   } else {
+          //     // Provide a default value if no valid option is selected
+          //     status = "0";
+          //   }
+
+          //   // Call the createEntry function to post the data
+          //   createEntry(
+          //     firstName,
+          //     lastName,
+          //     amount,
+          //   );
+          // } else {
+          //   // Show an error message if any of the required fields are empty
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(content: Text('Please fill in all required fields.')),
+          //   );
+          // }
           final firstName = _givenFirstNameController.text;
           final lastName = _givenLastNameController.text;
           final amount = _givenAmountController.text;
 
-          // Check if required fields are not empty
-          if (firstName.isNotEmpty &&
-              lastName.isNotEmpty &&
-              amount.isNotEmpty) {
-            // You can set the "status" based on the selected option here
-            String status;
-            if (_selectedOption == "New Entry") {
-              status = "1";
-            } else if (_selectedOption == "Old Entry") {
-              status = "0";
-            } else {
-              // Provide a default value if no valid option is selected
-              status = "0";
-            }
-
+          if (_selectedOption == "New Entry") {
             // Call the createEntry function to post the data
             createEntry(
               firstName,
               lastName,
               amount,
-            );
+            ).then((entryResponse) {
+              // Handle the response as needed
+            }).catchError((error) {
+              // Handle errors
+            });
+          } else if (_selectedOption == "Old Entry") {
+            // Call the oldEntry function
+            oldEntry(
+                    amount: _givenAmountController.text,
+                    selectedName: selectedName,
+                    selectedId: selectedUserId)
+                .then((entryResponse) {
+              // Handle the response as needed
+            }).catchError((error) {
+              // Handle errors
+            });
           } else {
-            // Show an error message if any of the required fields are empty
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Please fill in all required fields.')),
-            );
+            // Handle other cases or show an error message
           }
         },
       ),
