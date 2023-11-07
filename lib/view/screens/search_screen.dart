@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:d_app/utils/constant.dart';
 import 'package:d_app/view/custom_widgets/custom_gradientButton.dart';
@@ -7,8 +8,8 @@ import 'package:d_app/view/custom_widgets/text_widget.dart';
 import 'package:d_app/view/screens/given_entry_screen.dart';
 import 'package:d_app/view/screens/recieved_entry_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+
 
 class SerachScreen extends StatefulWidget {
   const SerachScreen({Key? key}) : super(key: key);
@@ -18,14 +19,17 @@ class SerachScreen extends StatefulWidget {
 }
 
 class _SerachScreenState extends State<SerachScreen> {
-  String selectedDate = DateFormat('dd/MM/yy').format(DateTime.now());
-  final TextStyle customTextStyle = TextStyle(
-    color: MyAppColor.mainBlueColor, // Set the text color to #2C1BEF
-    fontWeight: FontWeight.bold, // Customize the font weight
-  );
   TextEditingController _searchController = TextEditingController();
 
   var Loader;
+
+ 
+
+  String selectedDate = DateFormat('dd/MM/yy').format(DateTime.now());
+  final TextStyle customTextStyle = const TextStyle(
+    color: MyAppColor.mainBlueColor, // Set the text color to #2C1BEF
+    fontWeight: FontWeight.bold, // Customize the font weight
+  );
 
   void _recivedPopUp() {
     showModalBottomSheet<void>(

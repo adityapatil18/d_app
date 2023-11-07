@@ -51,7 +51,6 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           "amount": amount,
           "type": "credit",
           "status": "1",
-          // "id": generatedId ?? "",
           "id": selectedUserId
         }));
     print(selectedUserId);
