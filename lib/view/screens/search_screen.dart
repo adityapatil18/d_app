@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:d_app/utils/constant.dart';
@@ -10,6 +12,7 @@ import 'package:d_app/view/screens/recieved_entry_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../model/date_model.dart';
 
 class SerachScreen extends StatefulWidget {
   const SerachScreen({Key? key}) : super(key: key);
@@ -20,16 +23,51 @@ class SerachScreen extends StatefulWidget {
 
 class _SerachScreenState extends State<SerachScreen> {
   TextEditingController _searchController = TextEditingController();
+  String openingBalance = '';
+  String closingBalance = '';
+  List<Datum> allData = []; // Create a list to store transaction data
+  Date? date1;
 
-  var Loader;
-
- 
+  @override
+  void initState() {
+    super.initState();
+    fetchData(DateTime
+        .now()); // Fetch opening and closing balances for the current date
+  }
 
   String selectedDate = DateFormat('dd/MM/yy').format(DateTime.now());
   final TextStyle customTextStyle = const TextStyle(
     color: MyAppColor.mainBlueColor, // Set the text color to #2C1BEF
     fontWeight: FontWeight.bold, // Customize the font weight
   );
+
+  Future<void> fetchData(DateTime selectedDate) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://appapi.techgigs.in/api/transaction/getall?date=$selectedDate'),
+      );
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final date = Date.fromJson(jsonData);
+
+        // Assuming the API response structure has opening and closing balance data
+        openingBalance = date.total.openingBalance;
+        closingBalance = date.total.closingBalance;
+
+        // Update the UI with both balances and transaction data
+        setState(() {
+          date1 = dateFromJson(jsonEncode(jsonData));
+        });
+      } else {
+        // Handle the error when the API request fails
+        print('Failed to fetch data.');
+      }
+    } catch (error) {
+      // Handle any exceptions that occur during the API request
+      print('Error: $error');
+    }
+  }
 
   void _recivedPopUp() {
     showModalBottomSheet<void>(
@@ -62,10 +100,14 @@ class _SerachScreenState extends State<SerachScreen> {
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
-          leading: Image.asset(
-            'images/back_arrow.png',
-          ),
-          leadingWidth: 40,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Image.asset(
+                'images/back_arrow.png',
+              )),
+          leadingWidth: 50,
           actions: [
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -97,8 +139,8 @@ class _SerachScreenState extends State<SerachScreen> {
                       Column(
                         children: [
                           Text(
-                            "3/71 C",
-                            style: TextStyle(
+                            "$openingBalance",
+                            style: const TextStyle(
                                 color: MyAppColor.redColor,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600),
@@ -110,16 +152,21 @@ class _SerachScreenState extends State<SerachScreen> {
                               textweight: FontWeight.w600)
                         ],
                       ),
-                      Image.asset(
-                        'images/power.png',
-                        width: 53,
-                        height: 53,
+                      GestureDetector(
+                        onTap: () {
+                          showUninstallConfirmationDialog(context);
+                        },
+                        child: Image.asset(
+                          'images/power.png',
+                          width: 53,
+                          height: 53,
+                        ),
                       ),
                       Column(
                         children: [
                           Text(
-                            "3/71 C",
-                            style: TextStyle(
+                            "$closingBalance",
+                            style: const TextStyle(
                                 color: MyAppColor.redColor,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600),
@@ -134,67 +181,67 @@ class _SerachScreenState extends State<SerachScreen> {
                     ],
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 40,
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 15, bottom: 15),
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    child: Container(
-                      height: 100,
-                      child: TextField(
-                        textInputAction: TextInputAction.search,
-                        controller: _searchController,
-                        onSubmitted: (value) {
-                          setState(() {
-                            Loader = true;
-                          });
-                        },
-                        keyboardType: TextInputType.name,
-                        style: new TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "  Search by name, or amount",
-                          hintStyle: new TextStyle(
-                            color: Colors.black.withOpacity(0.54),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   margin: EdgeInsets.only(top: 15, bottom: 15),
+                  //   height: 50,
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     border: Border.all(
+                  //       color: Colors.black,
+                  //     ),
+                  //     borderRadius: BorderRadius.all(
+                  //       Radius.circular(10),
+                  //     ),
+                  //   ),
+                  //   child: Container(
+                  //     height: 100,
+                  //     child: TextField(
+                  //       textInputAction: TextInputAction.search,
+                  //       controller: _searchController,
+                  //       onSubmitted: (value) {
+                  //         setState(() {
+                  //           Loader = true;
+                  //         });
+                  //       },
+                  //       keyboardType: TextInputType.name,
+                  //       style: const TextStyle(
+                  //         color: Colors.black,
+                  //       ),
+                  //       decoration: InputDecoration(
+                  //         border: InputBorder.none,
+                  //         hintText: "  Search by name, or amount",
+                  //         hintStyle:  TextStyle(
+                  //           color: Colors.black.withOpacity(0.54),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
                     height: 50,
                     width: MediaQuery.sizeOf(context).width,
                     color: Colors.black,
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const TextWidget(
+                        TextWidget(
                             text: 'Date  ',
                             textcolor: Colors.white,
                             textsize: 12,
                             textweight: FontWeight.w600),
-                        const TextWidget(
+                        TextWidget(
                             text: 'Name',
                             textcolor: Colors.white,
                             textsize: 12,
                             textweight: FontWeight.w600),
-                        const TextWidget(
+                        TextWidget(
                             text: 'Received',
                             textcolor: Colors.white,
                             textsize: 12,
                             textweight: FontWeight.w600),
-                        const TextWidget(
+                        TextWidget(
                             text: 'Given',
                             textcolor: Colors.white,
                             textsize: 12,
@@ -205,8 +252,13 @@ class _SerachScreenState extends State<SerachScreen> {
                   Expanded(
                     child: ListView.builder(
                       // shrinkWrap: true,
-                      itemCount: 20,
+                      itemCount: date1?.data.length ?? 0,
                       itemBuilder: (context, index) {
+                        final transactionItem = date1!.data[index];
+                        final transactionType = transactionItem.trnxType;
+                        final amount = transactionItem.amount;
+                        final name = transactionItem.userDetail[0].firstName;
+
                         return Container(
                           height: 50,
                           width: MediaQuery.sizeOf(context).width,
@@ -223,11 +275,16 @@ class _SerachScreenState extends State<SerachScreen> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: TextWidget(
-                                          text: selectedDate,
-                                          textcolor: MyAppColor.textClor,
-                                          textsize: 12,
-                                          textweight: FontWeight.w600),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width /
+                                                8,
+                                        child: TextWidget(
+                                            text: selectedDate,
+                                            textcolor: MyAppColor.textClor,
+                                            textsize: 12,
+                                            textweight: FontWeight.w600),
+                                      ),
                                     ),
                                     VerticalDivider(
                                       color: Colors.black,
@@ -236,11 +293,16 @@ class _SerachScreenState extends State<SerachScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: TextWidget(
-                                          text: 'Adesh',
-                                          textcolor: MyAppColor.textClor,
-                                          textsize: 12,
-                                          textweight: FontWeight.w600),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width /
+                                                10,
+                                        child: TextWidget(
+                                            text: name,
+                                            textcolor: MyAppColor.textClor,
+                                            textsize: 12,
+                                            textweight: FontWeight.w600),
+                                      ),
                                     ),
                                     VerticalDivider(
                                       color: Colors.black,
@@ -248,11 +310,18 @@ class _SerachScreenState extends State<SerachScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: TextWidget(
-                                          text: '+10000',
-                                          textcolor: MyAppColor.greenColor,
-                                          textsize: 12,
-                                          textweight: FontWeight.w600),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width /
+                                                6,
+                                        child: TextWidget(
+                                            text: transactionType == 'credit'
+                                                ? amount
+                                                : '',
+                                            textcolor: MyAppColor.greenColor,
+                                            textsize: 12,
+                                            textweight: FontWeight.w600),
+                                      ),
                                     ),
                                     VerticalDivider(
                                       color: Colors.black,
@@ -260,11 +329,18 @@ class _SerachScreenState extends State<SerachScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: TextWidget(
-                                          text: '-5000',
-                                          textcolor: MyAppColor.redColor,
-                                          textsize: 12,
-                                          textweight: FontWeight.w600),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width /
+                                                6,
+                                        child: TextWidget(
+                                            text: transactionType == 'debit'
+                                                ? amount
+                                                : '',
+                                            textcolor: MyAppColor.redColor,
+                                            textsize: 12,
+                                            textweight: FontWeight.w600),
+                                      ),
                                     )
                                   ],
                                 ),
@@ -308,5 +384,43 @@ class _SerachScreenState extends State<SerachScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> showUninstallConfirmationDialog(BuildContext context) async {
+    final bool confirmUninstall = await showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Uninstall App"),
+          content: const Text("Are you sure you want to uninstall this app?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false);
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true);
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmUninstall == true) {
+      final packageName =
+          'com.example.d_app'; // Replace with your app's package name
+      final intent = AndroidIntent(
+        action: 'android.intent.action.DELETE',
+        data: 'package:$packageName',
+        package: packageName,
+        flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
+      );
+      await intent.launch();
+    }
   }
 }

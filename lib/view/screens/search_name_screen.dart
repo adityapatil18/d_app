@@ -80,25 +80,33 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
     return matchingNames;
   }
 
-  void selectName(String fullName, String userId) {
-    setState(() {
-      _searchNameController.text = fullName;
-      searchResults.clear(); // Clear the search results
-      selectedUserId = userId; // Store the selected user's ID
-      selectedName = fullName;
-      fetchTransactionsForUser(userId);
-    });
-  }
+  // void selectName(String fullName, String userId) {
+  //   print('Selecting Name: $fullName'); // Add this line to check
+
+  //   setState(() {
+  //     _searchNameController.text = fullName;
+  //     selectedName = fullName; // Set the selected name
+  //     print('Selected Name: $selectedName'); // Add this line to check
+  //     searchResults.clear();
+
+  //     selectedUserId = userId;
+  //     // fetchTransactionsForUser(userId);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        leading: Image.asset(
-          'images/back_arrow.png',
-        ),
-        leadingWidth: 40,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Image.asset(
+              'images/back_arrow.png',
+            )),
+        leadingWidth: 50,
         actions: [
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -126,77 +134,86 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                 FilteringTextInputFormatter.singleLineFormatter
               ],
               onChanged: (query) {
-                searchResults = searchNames(query);
+                setState(() {
+                  searchResults = searchNames(query);
+                });
               },
             ),
-            if (searchResults.isNotEmpty)
-              ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: searchResults.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(searchResults[index].fullName),
-                      onTap: () {
-                        // Handle the selection of the name here
-                        _searchNameController.text =
-                            searchResults[index].fullName;
+            Stack(
+              children: [
+                Container(
+                  height: 50,
+                  width: MediaQuery.sizeOf(context).width,
+                  color: Colors.black,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextWidget(
+                          text: 'Date',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600),
+                      TextWidget(
+                          text: 'Name',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600),
+                      TextWidget(
+                          text: 'Received',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600),
+                      TextWidget(
+                          text: 'Given',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600)
+                    ],
+                  ),
+                ),
+                if (searchResults.isNotEmpty)
+                  Container(
+                    color: Colors.red,
+                    height: MediaQuery.sizeOf(context).height / 3,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: searchResults.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: ListTile(
+                            title: Text(searchResults[index].fullName),
+                            onTap: () {
+                              // Handle the selection of the name here
 
-                        // Clear the search results and hide the ListView
-                        setState(() {
-                          selectedUserId = searchResults[index].id;
-                          fetchTransactionsForUser(selectedUserId);
-                          searchResults.clear();
-                        });
+                              // Clear the search results and hide the ListView
+                              setState(() {
+                                _searchNameController.text =
+                                    searchResults[index].fullName;
+                                selectedName = searchResults[index].firstName;
+                                selectedUserId = searchResults[index].id;
+                                fetchTransactionsForUser(selectedUserId);
+                                searchResults.clear();
+                              });
+                            },
+                          ),
+                        );
                       },
                     ),
-                  );
-                },
-              ),
-            SizedBox(
-              height: 100,
-            ),
-            Container(
-              height: 50,
-              width: MediaQuery.sizeOf(context).width,
-              color: Colors.black,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const TextWidget(
-                      text: 'Date',
-                      textcolor: Colors.white,
-                      textsize: 12,
-                      textweight: FontWeight.w600),
-                  const TextWidget(
-                      text: 'Name',
-                      textcolor: Colors.white,
-                      textsize: 12,
-                      textweight: FontWeight.w600),
-                  const TextWidget(
-                      text: 'Received',
-                      textcolor: Colors.white,
-                      textsize: 12,
-                      textweight: FontWeight.w600),
-                  const TextWidget(
-                      text: 'Given',
-                      textcolor: Colors.white,
-                      textsize: 12,
-                      textweight: FontWeight.w600)
-                ],
-              ),
+                  ),
+              ],
             ),
             Expanded(
               child: ListView.builder(
                 // shrinkWrap: true,
+
                 itemCount: transaction?.data.length ?? 0,
                 itemBuilder: (context, index) {
                   final transactionItem = transaction!.data[index];
                   final date =
                       transactionItem.createdAt.toString().substring(0, 10);
                   final transactionType = transactionItem.trnxType;
-                  final amount = transactionItem.amount.numberDecimal;
+                  final amount = transactionItem.amount;
 
                   return Container(
                     height: 50,
@@ -219,7 +236,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                       textweight: FontWeight.w600),
                                 ),
                               ),
-                              VerticalDivider(
+                              const VerticalDivider(
                                 color: Colors.black,
                                 thickness: 1,
                                 // width: 10,
@@ -229,13 +246,13 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 child: Container(
                                   width: MediaQuery.sizeOf(context).width / 6.5,
                                   child: TextWidget(
-                                      text: 'aditya patil',
+                                      text: selectedName,
                                       textcolor: MyAppColor.textClor,
                                       textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
-                              VerticalDivider(
+                              const VerticalDivider(
                                 color: Colors.black,
                                 thickness: 1,
                               ),
@@ -252,7 +269,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                       textweight: FontWeight.w600),
                                 ),
                               ),
-                              VerticalDivider(
+                              const VerticalDivider(
                                 color: Colors.black,
                                 thickness: 1,
                               ),
@@ -285,12 +302,12 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
         height: 60,
         width: MediaQuery.sizeOf(context).width,
         color: MyAppColor.yellowColor,
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Row(
               children: [
-                TextWidget(
+                const TextWidget(
                     text: 'Total \nReceived',
                     textcolor: MyAppColor.textClor,
                     textsize: 13,
@@ -299,7 +316,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                   width: 20,
                 ),
                 TextWidget(
-                    text: '50000',
+                    text: ' ${transaction?.total.totalReceived ?? 0}',
                     textcolor: MyAppColor.textClor,
                     textsize: 14,
                     textweight: FontWeight.w800)
@@ -311,7 +328,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
             ),
             Row(
               children: [
-                TextWidget(
+                const TextWidget(
                     text: 'Total \nGiven',
                     textcolor: MyAppColor.textClor,
                     textsize: 13,
@@ -320,7 +337,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                   width: 20,
                 ),
                 TextWidget(
-                    text: '50000',
+                    text: '${transaction?.total.totalGiven ?? 0}',
                     textcolor: MyAppColor.textClor,
                     textsize: 14,
                     textweight: FontWeight.w800)

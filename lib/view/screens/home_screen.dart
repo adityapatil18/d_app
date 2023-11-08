@@ -21,8 +21,10 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomContainer(
-                  imagePath: 'images/1.png',
+                  imagePath: 'images/add_entry4.png',
                   text: 'Add Entry',
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.red),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -31,11 +33,13 @@ class HomeScreen extends StatelessWidget {
                         ));
                   }),
               SizedBox(
-                width: 20,
+                width: 40,
               ),
               CustomContainer(
-                  imagePath: 'images/2.png',
+                  borderRadius: BorderRadius.circular(15),
+                  imagePath: 'images/search.png',
                   text: 'Search by Name',
+                  border: Border.all(color: Colors.red),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -47,20 +51,6 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(
             height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomContainer(
-                  imagePath: 'images/3.png',
-                  text: 'Search by Date',
-                  onTap: () {}),
-              SizedBox(
-                width: 20,
-              ),
-              CustomContainer(
-                  imagePath: 'images/4.png', text: 'List All', onTap: () {})
-            ],
           ),
           SizedBox(
             height: 100,

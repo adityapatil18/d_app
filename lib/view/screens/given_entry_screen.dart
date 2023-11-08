@@ -123,8 +123,9 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
   void selectName(String fullName, String userId) {
     setState(() {
       _searchController.text = fullName;
-      searchResults.clear(); // Clear the search results
       selectedUserId = userId; // Store the selected user's ID
+            searchResults.clear(); // Clear the search results
+
     });
   }
 
@@ -144,8 +145,8 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
               height: 40,
             ),
             const TextWidget(
-                text: 'RECEIVED ENTRY',
-                textcolor: MyAppColor.greenColor,
+                text: 'GIVEN ENTRY',
+                textcolor: MyAppColor.redColor,
                 textsize: 22,
                 textweight: FontWeight.w700),
             SizedBox(

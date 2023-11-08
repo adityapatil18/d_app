@@ -28,8 +28,8 @@ class CustomGradientButton extends StatelessWidget {
           buttonText,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -51,8 +51,8 @@ class CustomGradientContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 154.0,
-      height: 53.0,
+      width: 160.0,
+      height: 64.0,
       decoration: BoxDecoration(
         color: containerColor,
         borderRadius: BorderRadius.circular(5.0),
