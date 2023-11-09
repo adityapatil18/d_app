@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:d_app/view/screens/search_name_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ import '../../utils/constant.dart';
 import '../custom_widgets/dateSelection_container.dart';
 import '../custom_widgets/text_field.dart';
 import '../custom_widgets/text_widget.dart';
+import 'search_screen.dart';
 
 class RecivedEntryScreen extends StatefulWidget {
   const RecivedEntryScreen({super.key});
@@ -54,9 +56,14 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           "id": selectedUserId
         }));
     print(selectedUserId);
-    print('api response:${response.body}');
+    print('create entry api response:${response.body}');
 
     if (response.statusCode == 200) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SerachScreen(),
+          ));
       final entryResponse = REntry.fromJson(jsonDecode(response.body));
       if (entryResponse.id != null && entryResponse.id!.isNotEmpty) {
         selectedUserId = entryResponse.id!;
@@ -422,20 +429,17 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           final firstName = _receivedFirstNameController.text;
           final lastName = _receivedLastNameController.text;
           final amount = _amountController.text;
-setState(() {
-              
-            });
+          setState(() {});
           if (_selectedOption == "New Entry") {
             // Call the createEntry function to post the data
-            
+
             createEntry(
               firstName,
               lastName,
               amount,
             ).then((entryResponse) {
               setState(() {
-                fetchData('');
-                Navigator.pop(context);
+                // fetchDatafordate(DateTime.now());
               });
               // Handle the response as needed
             }).catchError((error) {
