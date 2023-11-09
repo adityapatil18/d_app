@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -97,91 +99,139 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Image.asset(
+                'images/back_arrow.png',
+              )),
+          leadingWidth: 50,
+          centerTitle: true,
+          title: InkWell(
+            onTap: () {
+              showUninstallConfirmationDialog(context);
             },
-            icon: Image.asset(
-              'images/back_arrow.png',
-            )),
-        leadingWidth: 50,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: IconButton(
-              onPressed: () {},
-              icon: Image.asset('images/forward_arrow.png', width: 40),
+            child: Image.asset(
+              'images/power.png',
+              width: 40,
+              height: 40,
             ),
           ),
-        ],
-        backgroundColor: Colors.white,
-      ),
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                  hintText: 'Search by name',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
-              controller: _searchNameController,
-              keyboardType: TextInputType.text,
-              inputFormatters: [
-                FilteringTextInputFormatter.singleLineFormatter
-              ],
-              onChanged: (query) {
-                setState(() {
-                  searchResults = searchNames(query);
-                });
-              },
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: IconButton(
+                onPressed: () {},
+                icon: Image.asset('images/forward_arrow.png', width: 40),
+              ),
             ),
-            Stack(
-              children: [
-                Container(
-                  height: 50,
-                  width: MediaQuery.sizeOf(context).width,
-                  color: Colors.black,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextWidget(
-                          text: 'Date',
-                          textcolor: Colors.white,
-                          textsize: 12,
-                          textweight: FontWeight.w600),
-                      TextWidget(
-                          text: 'Name',
-                          textcolor: Colors.white,
-                          textsize: 12,
-                          textweight: FontWeight.w600),
-                      TextWidget(
-                          text: 'Received',
-                          textcolor: Colors.white,
-                          textsize: 12,
-                          textweight: FontWeight.w600),
-                      TextWidget(
-                          text: 'Given',
-                          textcolor: Colors.white,
-                          textsize: 12,
-                          textweight: FontWeight.w600)
+          ],
+          backgroundColor: Colors.white,
+        ),
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(
+                        hintText: 'Search by name',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    controller: _searchNameController,
+                    keyboardType: TextInputType.text,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.singleLineFormatter
                     ],
+                    onChanged: (query) {
+                      setState(() {
+                        searchResults = searchNames(query);
+                      });
+                    },
                   ),
-                ),
-                if (searchResults.isNotEmpty)
+                  SizedBox(
+                    height: 30,
+                  ),
                   Container(
-                    color: Colors.red,
-                    height: MediaQuery.sizeOf(context).height / 3,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: searchResults.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: ListTile(
+                    height: 50,
+                    width: MediaQuery.sizeOf(context).width,
+                    color: Colors.black,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Date',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        // VerticalDivider(
+                        //   thickness: 1,
+                        //   color: Colors.white,
+                        // ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Name',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Received',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Given',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  if (searchResults.isNotEmpty)
+                    Container(
+                      height: MediaQuery.sizeOf(context).height * 0.25,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: searchResults.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            textColor: Colors.black,
+                            tileColor: index.isEven
+                                ? MyAppColor.grey2Color
+                                : Colors.white,
                             title: Text(searchResults[index].fullName),
                             onTap: () {
                               // Handle the selection of the name here
@@ -196,39 +246,37 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 searchResults.clear();
                               });
                             },
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                // shrinkWrap: true,
+                  Expanded(
+                    child: ListView.builder(
+                      // shrinkWrap: true,
 
-                itemCount: transaction?.data.length ?? 0,
-                itemBuilder: (context, index) {
-                  final transactionItem = transaction!.data[index];
-                  final date =
-                      transactionItem.createdAt.toString().substring(0, 10);
-                  final transactionType = transactionItem.trnxType;
-                  final amount = transactionItem.amount;
+                      itemCount: transaction?.data.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final transactionItem = transaction!.data[index];
+                        final date = transactionItem.createdAt
+                            .toString()
+                            .substring(0, 10);
+                        final transactionType = transactionItem.trnxType;
+                        final amount = transactionItem.amount;
 
-                  return Container(
-                    height: 50,
-                    width: MediaQuery.sizeOf(context).width,
-                    color: index.isEven ? MyAppColor.grey2Color : Colors.white,
-                    child: Row(
-                      children: [
-                        Expanded(
+                        return Container(
+                          height: 50,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: index.isEven
+                              ? MyAppColor.grey2Color
+                              : Colors.white,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              Expanded(
+                                flex: 1,
                                 child: Container(
-                                  width: MediaQuery.sizeOf(context).width / 6.5,
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
                                   child: TextWidget(
                                       text: '${date}',
                                       textcolor: MyAppColor.textClor,
@@ -241,10 +289,12 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 thickness: 1,
                                 // width: 10,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              Expanded(
+                                flex: 1,
                                 child: Container(
-                                  width: MediaQuery.sizeOf(context).width / 6.5,
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
                                   child: TextWidget(
                                       text: selectedName,
                                       textcolor: MyAppColor.textClor,
@@ -256,10 +306,12 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 color: Colors.black,
                                 thickness: 1,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              Expanded(
+                                flex: 1,
                                 child: Container(
-                                  width: MediaQuery.sizeOf(context).width / 6.5,
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
                                   child: TextWidget(
                                       text: transactionType == "credit"
                                           ? amount
@@ -273,10 +325,12 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 color: Colors.black,
                                 thickness: 1,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              Expanded(
+                                flex: 1,
                                 child: Container(
-                                  width: MediaQuery.sizeOf(context).width / 6,
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
                                   child: TextWidget(
                                       text: transactionType == 'debit'
                                           ? amount
@@ -288,64 +342,135 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                               )
                             ],
                           ),
-                        )
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: Container(
-        height: 60,
-        width: MediaQuery.sizeOf(context).width,
-        color: MyAppColor.yellowColor,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        bottomNavigationBar: Row(
           children: [
-            Row(
-              children: [
-                const TextWidget(
-                    text: 'Total \nReceived',
-                    textcolor: MyAppColor.textClor,
-                    textsize: 13,
-                    textweight: FontWeight.w600),
-                SizedBox(
-                  width: 20,
-                ),
-                TextWidget(
-                    text: ' ${transaction?.total.totalReceived ?? 0}',
-                    textcolor: MyAppColor.textClor,
-                    textsize: 14,
-                    textweight: FontWeight.w800)
-              ],
+            Container(
+              alignment: Alignment.center,
+              color: MyAppColor.yellowColor,
+              width: MediaQuery.sizeOf(context).width / 2.01,
+              height: 60,
+              child: TextWidget(
+                  text:
+                      "Total Received: ${transaction?.total.totalReceived ?? 0}",
+                  textcolor: MyAppColor.textClor,
+                  textsize: 13,
+                  textweight: FontWeight.w600),
             ),
-            VerticalDivider(
-              thickness: 1,
-              color: MyAppColor.mainblackColor,
+            Container(
+              width: 1,
+              height: 60,
+              color: Colors.black,
             ),
-            Row(
-              children: [
-                const TextWidget(
-                    text: 'Total \nGiven',
-                    textcolor: MyAppColor.textClor,
-                    textsize: 13,
-                    textweight: FontWeight.w600),
-                SizedBox(
-                  width: 20,
-                ),
-                TextWidget(
-                    text: '${transaction?.total.totalGiven ?? 0}',
-                    textcolor: MyAppColor.textClor,
-                    textsize: 14,
-                    textweight: FontWeight.w800)
-              ],
+            Container(
+              alignment: Alignment.center,
+              color: MyAppColor.yellowColor,
+              width: MediaQuery.sizeOf(context).width / 2.01,
+              height: 60,
+              child: TextWidget(
+                  text: "Total Given: ${transaction?.total.totalGiven ?? 0}",
+                  textcolor: MyAppColor.textClor,
+                  textsize: 13,
+                  textweight: FontWeight.w600),
             ),
           ],
-        ),
-      ),
+        )
+        // Container(
+        //   height: 60,
+        //   color: MyAppColor.yellowColor,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //     children: [
+        //       Container(
+        //         width: MediaQuery.sizeOf(context).width / 2,
+        //         child: Row(
+        //           children: [
+        //             const TextWidget(
+        //                 text: 'Total \nReceived',
+        //                 textcolor: MyAppColor.textClor,
+        //                 textsize: 13,
+        //                 textweight: FontWeight.w600),
+        //             SizedBox(
+        //               width: 20,
+        //             ),
+        //             TextWidget(
+        //                 text: ' ${transaction?.total.totalReceived ?? 0}',
+        //                 textcolor: MyAppColor.textClor,
+        //                 textsize: 14,
+        //                 textweight: FontWeight.w800)
+        //           ],
+        //         ),
+        //       ),
+
+        //       Container(
+        //         width: MediaQuery.sizeOf(context).width / 2,
+        //         child: Row(
+        //           children: [
+        //             const TextWidget(
+        //                 text: 'Total \nGiven',
+        //                 textcolor: MyAppColor.textClor,
+        //                 textsize: 13,
+        //                 textweight: FontWeight.w600),
+        //             SizedBox(
+        //               width: 20,
+        //             ),
+        //             TextWidget(
+        //                 text: '${transaction?.total.totalGiven ?? 0}',
+        //                 textcolor: MyAppColor.textClor,
+        //                 textsize: 14,
+        //                 textweight: FontWeight.w800)
+        //           ],
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        );
+  }
+
+  Future<void> showUninstallConfirmationDialog(BuildContext context) async {
+    final bool confirmUninstall = await showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Uninstall App"),
+          content: const Text("Are you sure you want to uninstall this app?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false);
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true);
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
     );
+
+    if (confirmUninstall == true) {
+      final packageName =
+          'com.example.d_app'; // Replace with your app's package name
+      final intent = AndroidIntent(
+        action: 'android.intent.action.DELETE',
+        data: 'package:$packageName',
+        package: packageName,
+        flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
+      );
+      await intent.launch();
+    }
   }
 }

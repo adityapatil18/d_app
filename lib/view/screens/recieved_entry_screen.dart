@@ -99,17 +99,20 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   }
 
   Future<void> fetchData(String name) async {
+    allData.clear();
     final response = await http.get(
       Uri.parse(
           'https://appapi.techgigs.in/api/user/list?userName=$name'), // Replace with the actual API endpoint
     );
 
     if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      final allDataList =
-          List<Datum>.from(jsonData['data'].map((x) => Datum.fromJson(x)));
       setState(() {
+        final jsonData = jsonDecode(response.body);
+        final allDataList =
+            List<Datum>.from(jsonData['data'].map((x) => Datum.fromJson(x)));
         allData = allDataList;
+        print('JSON DAT:$jsonData');
+        print('api response:$allData');
       });
     } else {
       throw Exception('Failed to fetch data.');
@@ -136,6 +139,13 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
       searchResults.clear(); // Clear the search results
       selectedUserId = userId; // Store the selected user's ID
     });
+  }
+
+  void clearText() {
+    _amountController.clear();
+    _receivedFirstNameController.clear();
+    _receivedLastNameController.clear();
+    _searchNameController.clear();
   }
 
   @override
@@ -314,21 +324,22 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                         shrinkWrap: true,
                         itemCount: searchResults.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            child: ListTile(
-                              title: Text(searchResults[index].fullName),
-                              onTap: () {
-                                // Handle the selection of the name here
-                                _searchNameController.text =
-                                    searchResults[index].fullName;
-                                // Clear the search results and hide the ListView
-                                setState(() {
-                                  selectedName = searchResults[index].fullName;
-                                  selectedUserId = searchResults[index].id;
-                                  searchResults.clear();
-                                });
-                              },
-                            ),
+                          return ListTile(
+                            tileColor: index.isEven
+                                ? MyAppColor.grey2Color
+                                : Colors.white,
+                            title: Text(searchResults[index].fullName),
+                            onTap: () {
+                              // Handle the selection of the name here
+                              _searchNameController.text =
+                                  searchResults[index].fullName;
+                              // Clear the search results and hide the ListView
+                              setState(() {
+                                selectedName = searchResults[index].fullName;
+                                selectedUserId = searchResults[index].id;
+                                searchResults.clear();
+                              });
+                            },
                           );
                         },
                       ),
@@ -411,17 +422,33 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           final firstName = _receivedFirstNameController.text;
           final lastName = _receivedLastNameController.text;
           final amount = _amountController.text;
-
+setState(() {
+              
+            });
           if (_selectedOption == "New Entry") {
             // Call the createEntry function to post the data
+            
             createEntry(
               firstName,
               lastName,
               amount,
             ).then((entryResponse) {
+              setState(() {
+                fetchData('');
+                Navigator.pop(context);
+              });
               // Handle the response as needed
             }).catchError((error) {
               // Handle errors
+              if (firstName.isNotEmpty &&
+                  lastName.isNotEmpty &&
+                  amount.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Entry Added Successfully.')));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Please fill in all required fields.')));
+              }
             });
           } else if (_selectedOption == "Old Entry") {
             // Call the oldEntry function
@@ -430,13 +457,35 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                     selectedName: selectedName,
                     selectedId: selectedUserId)
                 .then((entryResponse) {
-              // Handle the response as needed
+              setState(() {
+                fetchData(selectedName);
+                // Navigator.pop(context);
+                if (amount.isNotEmpty &&
+                    selectedName.isNotEmpty &&
+                    amount.isNotEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Entry Added Successfully.')));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please fill in all required fields.')));
+                }
+              });
             }).catchError((error) {
               // Handle errors
+              if (amount.isNotEmpty &&
+                  selectedName.isNotEmpty &&
+                  amount.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Entry Added Successfully.')));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Please fill in all required fields.')));
+              }
             });
           } else {
             // Handle other cases or show an error message
           }
+          clearText();
         },
       ),
     );

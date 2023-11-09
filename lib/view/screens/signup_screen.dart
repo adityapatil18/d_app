@@ -39,8 +39,6 @@ class _SignupScreenState extends State<SignupScreen> {
       });
     }
 
-    
-
     Future<void> login(String email, String password) async {
       try {
         Response response = await post(
@@ -100,7 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(
                 height: 30,
               ),
-    const           TextWidget(
+              const TextWidget(
                   text: 'Sign In',
                   textcolor: MyAppColor.mainblackColor,
                   textsize: 24,
@@ -145,7 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     }
                   },
-                  child:const TextWidget(
+                  child: const TextWidget(
                       text: 'LOGIN',
                       textcolor: MyAppColor.mainblackColor,
                       textsize: 14,

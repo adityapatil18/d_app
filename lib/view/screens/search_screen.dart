@@ -31,7 +31,7 @@ class _SerachScreenState extends State<SerachScreen> {
   @override
   void initState() {
     super.initState();
-    fetchData(DateTime
+    fetchDatafordate(DateTime
         .now()); // Fetch opening and closing balances for the current date
   }
 
@@ -41,7 +41,7 @@ class _SerachScreenState extends State<SerachScreen> {
     fontWeight: FontWeight.bold, // Customize the font weight
   );
 
-  Future<void> fetchData(DateTime selectedDate) async {
+  Future<void> fetchDatafordate(DateTime selectedDate) async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -52,11 +52,11 @@ class _SerachScreenState extends State<SerachScreen> {
         final date = Date.fromJson(jsonData);
 
         // Assuming the API response structure has opening and closing balance data
-        openingBalance = date.total.openingBalance;
-        closingBalance = date.total.closingBalance;
 
         // Update the UI with both balances and transaction data
         setState(() {
+          openingBalance = date.total.openingBalance;
+          closingBalance = date.total.closingBalance;
           date1 = dateFromJson(jsonEncode(jsonData));
         });
       } else {
@@ -80,6 +80,9 @@ class _SerachScreenState extends State<SerachScreen> {
             child: RecivedEntryScreen());
       },
     );
+    setState(() {
+      fetchDatafordate(DateTime.now());
+    });
   }
 
   void _givenPopUp() {
@@ -223,29 +226,61 @@ class _SerachScreenState extends State<SerachScreen> {
                     height: 50,
                     width: MediaQuery.sizeOf(context).width,
                     color: Colors.black,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        TextWidget(
-                            text: 'Date  ',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600),
-                        TextWidget(
-                            text: 'Name',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600),
-                        TextWidget(
-                            text: 'Received',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600),
-                        TextWidget(
-                            text: 'Given',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600)
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Date',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        // VerticalDivider(
+                        //   thickness: 1,
+                        //   color: Colors.white,
+                        // ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Name',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Received',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
+                                text: 'Given',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -268,81 +303,72 @@ class _SerachScreenState extends State<SerachScreen> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width /
-                                                8,
-                                        child: TextWidget(
-                                            text: selectedDate,
-                                            textcolor: MyAppColor.textClor,
-                                            textsize: 12,
-                                            textweight: FontWeight.w600),
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      color: Colors.black,
-                                      thickness: 1,
-                                      width: 10,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width /
-                                                10,
-                                        child: TextWidget(
-                                            text: name,
-                                            textcolor: MyAppColor.textClor,
-                                            textsize: 12,
-                                            textweight: FontWeight.w600),
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      color: Colors.black,
-                                      thickness: 1,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width /
-                                                6,
-                                        child: TextWidget(
-                                            text: transactionType == 'credit'
-                                                ? amount
-                                                : '',
-                                            textcolor: MyAppColor.greenColor,
-                                            textsize: 12,
-                                            textweight: FontWeight.w600),
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      color: Colors.black,
-                                      thickness: 1,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width /
-                                                6,
-                                        child: TextWidget(
-                                            text: transactionType == 'debit'
-                                                ? amount
-                                                : '',
-                                            textcolor: MyAppColor.redColor,
-                                            textsize: 12,
-                                            textweight: FontWeight.w600),
-                                      ),
-                                    )
-                                  ],
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
+                                  child: TextWidget(
+                                      text: selectedDate,
+                                      textcolor: MyAppColor.textClor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600),
+                                ),
+                              ),
+                              const VerticalDivider(
+                                color: Colors.black,
+                                thickness: 1,
+                                // width: 10,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
+                                  child: TextWidget(
+                                      text: name,
+                                      textcolor: MyAppColor.textClor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600),
+                                ),
+                              ),
+                              const VerticalDivider(
+                                color: Colors.black,
+                                thickness: 1,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
+                                  child: TextWidget(
+                                      text: transactionType == "credit"
+                                          ? amount
+                                          : '',
+                                      textcolor: MyAppColor.greenColor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600),
+                                ),
+                              ),
+                              const VerticalDivider(
+                                color: Colors.black,
+                                thickness: 1,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
+                                  child: TextWidget(
+                                      text: transactionType == 'debit'
+                                          ? amount
+                                          : '',
+                                      textcolor: MyAppColor.redColor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600),
                                 ),
                               )
                             ],
@@ -368,7 +394,7 @@ class _SerachScreenState extends State<SerachScreen> {
               onPressed: () {
                 _recivedPopUp();
               },
-              buttonText: 'Recived',
+              buttonText: 'Received',
               containerColor: Color(0xFFF0D963),
               gradientColors: [Color(0xFF1F9540), Color(0xFF61CC7F)],
             ),
