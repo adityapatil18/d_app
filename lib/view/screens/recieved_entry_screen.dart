@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:d_app/view/screens/search_name_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +13,7 @@ import '../../utils/constant.dart';
 import '../custom_widgets/dateSelection_container.dart';
 import '../custom_widgets/text_field.dart';
 import '../custom_widgets/text_widget.dart';
-import 'search_screen.dart';
+import 'add_entry.dart';
 
 class RecivedEntryScreen extends StatefulWidget {
   const RecivedEntryScreen({super.key});
@@ -59,11 +61,6 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
     print('create entry api response:${response.body}');
 
     if (response.statusCode == 200) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SerachScreen(),
-          ));
       final entryResponse = REntry.fromJson(jsonDecode(response.body));
       if (entryResponse.id != null && entryResponse.id!.isNotEmpty) {
         selectedUserId = entryResponse.id!;
@@ -106,21 +103,18 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   }
 
   Future<void> fetchData(String name) async {
-    allData.clear();
     final response = await http.get(
       Uri.parse(
           'https://appapi.techgigs.in/api/user/list?userName=$name'), // Replace with the actual API endpoint
     );
 
     if (response.statusCode == 200) {
-      setState(() {
-        final jsonData = jsonDecode(response.body);
-        final allDataList =
-            List<Datum>.from(jsonData['data'].map((x) => Datum.fromJson(x)));
-        allData = allDataList;
-        print('JSON DAT:$jsonData');
-        print('api response:$allData');
-      });
+      final jsonData = jsonDecode(response.body);
+      final allDataList =
+          List<Datum>.from(jsonData['data'].map((x) => Datum.fromJson(x)));
+      allData = allDataList;
+      print('JSON DAT:$jsonData');
+      print('api response:$allData');
     } else {
       throw Exception('Failed to fetch data.');
     }
@@ -158,10 +152,15 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Image.asset(
-        'images/question.png',
-        height: 30,
-        width: 30,
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          showUninstallConfirmationDialog(context);
+        },
+        child: Image.asset(
+          'images/power.png',
+          width: 40,
+          height: 50,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: SingleChildScrollView(
@@ -179,8 +178,8 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
               height: 20,
             ),
             CustomDateSelectionContainer(
-                textColor: MyAppColor.grey3Color,
-                iconColor: MyAppColor.grey3Color),
+                textColor: MyAppColor.mainBlueColor,
+                iconColor: MyAppColor.mainBlueColor),
             Row(
               children: [
                 Row(
@@ -335,14 +334,20 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                             tileColor: index.isEven
                                 ? MyAppColor.grey2Color
                                 : Colors.white,
-                            title: Text(searchResults[index].fullName),
+                            title: Text(searchResults[index].firstName +
+                                " " +
+                                searchResults[index].lastName),
                             onTap: () {
                               // Handle the selection of the name here
                               _searchNameController.text =
-                                  searchResults[index].fullName;
+                                  searchResults[index].firstName +
+                                      " " +
+                                      searchResults[index].lastName;
                               // Clear the search results and hide the ListView
                               setState(() {
-                                selectedName = searchResults[index].fullName;
+                                selectedName = searchResults[index].firstName +
+                                    " " +
+                                    searchResults[index].lastName;
                                 selectedUserId = searchResults[index].id;
                                 searchResults.clear();
                               });
@@ -391,107 +396,246 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
               textweight: FontWeight.w600),
         ),
         onTap: () {
-          // // setState(() {
-          // //   createEntry(_receivedFirstNameController.text,
-          // //       _receivedLastNameController.text, _amountController.text);
-          // // });
-          // final firstName = _receivedFirstNameController.text;
-          // final lastName = _receivedLastNameController.text;
-          // final amount = _amountController.text;
-
-          // // Check if required fields are not empty
-          // if (firstName.isNotEmpty &&
-          //     lastName.isNotEmpty &&
-          //     amount.isNotEmpty) {
-          //   // You can set the "status" based on the selected option here
-          //   String status;
-          //   if (_selectedOption == "New Entry") {
-          //     status = "1";
-          //   } else if (_selectedOption == "Old Entry") {
-          //     status = "0";
-          //   } else {
-          //     // Provide a default value if no valid option is selected
-          //     status = "0";
-          //   }
-
+          final firstName = _receivedFirstNameController.text;
+          final lastName = _receivedLastNameController.text;
+          final amount = _amountController.text;
+          // if (_selectedOption == "New Entry") {
           //   // Call the createEntry function to post the data
+
           //   createEntry(
           //     firstName,
           //     lastName,
           //     amount,
-          //   );
+          //   ).then((entryResponse) {
+          //     // Handle the response as needed
+          //   }).catchError((error) {
+          //     // Handle errors
+          //     if (firstName.isNotEmpty &&
+          //         lastName.isNotEmpty &&
+          //         amount.isNotEmpty) {
+          //       ScaffoldMessenger.of(context).showSnackBar(
+          //           const SnackBar(content: Text('Entry Added Successfully.')));
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => AddEntryScreen(),
+          //           ));
+          //     } else {
+          //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //           content: Text('Please fill in all required fields.')));
+          //     }
+          //   });
+          // } else if (_selectedOption == "Old Entry") {
+          //   // Call the oldEntry function
+          //   oldEntry(
+          //           amount: _amountController.text,
+          //           selectedName: selectedName,
+          //           selectedId: selectedUserId)
+          //       .then((entryResponse) {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => AddEntryScreen(),
+          //         ));
+          //     setState(() {
+          //       fetchData(selectedName);
+          //       // Navigator.pop(context);
+          //       if (amount.isNotEmpty &&
+          //           selectedName.isNotEmpty &&
+          //           amount.isNotEmpty) {
+          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //             content: Text('Entry Added Successfully.')));
+          //       } else {
+          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //             content: Text('Please fill in all required fields.')));
+          //       }
+          //     });
+          //   }).catchError((error) {
+          //     // Handle errors
+          //     if (amount.isNotEmpty &&
+          //         selectedName.isNotEmpty &&
+          //         amount.isNotEmpty) {
+          //       ScaffoldMessenger.of(context).showSnackBar(
+          //           const SnackBar(content: Text('Entry Added Successfully.')));
+          //     } else {
+          //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //           content: Text('Please fill in all required fields.')));
+          //     }
+          //   });
           // } else {
-          //   // Show an error message if any of the required fields are empty
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //     SnackBar(content: Text('Please fill in all required fields.')),
-          //   );
+          //   // Handle other cases or show an error message
           // }
-          final firstName = _receivedFirstNameController.text;
-          final lastName = _receivedLastNameController.text;
-          final amount = _amountController.text;
-          setState(() {});
-          if (_selectedOption == "New Entry") {
-            // Call the createEntry function to post the data
+          // clearText();
+          // if (firstName.isNotEmpty &&
+          //     lastName.isNotEmpty &&
+          //     amount.isNotEmpty) {
+          //   // Check if the user already exists
+          //   if (_selectedOption == "New Entry" &&
+          //       _checkUserExists(firstName, lastName)) {
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(
+          //           content:
+          //               Text('User already exists. Please create a new one.')),
+          //     );
+          //   } else {
+          //     // Call the createEntry function to post the data
+          //     createEntry(firstName, lastName, amount).then((entryResponse) {
+          //       // Handle the response as needed
+          //       // Navigate to AddEntryScreen
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => AddEntryScreen(),
+          //         ),
+          //       );
+          //     }).catchError((error) {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => AddEntryScreen(),
+          //         ),
+          //       );
+          //       // Handle errors
+          //       ScaffoldMessenger.of(context).showSnackBar(
+          //         const SnackBar(content: Text('Entry added succesfully')),
+          //       );
+          //     });
+          //   }
+          // } else if (_selectedOption == "Old Entry") {
+          //   oldEntry(
+          //           amount: _amountController.text,
+          //           selectedName: selectedName,
+          //           selectedId: selectedUserId)
+          //       .then((entryResponse) {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => AddEntryScreen(),
+          //         ));
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //         const SnackBar(content: Text('Entry Added Successfully.')));
+          //   });
+          // } else {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(content: Text('Add all required fields.')));
+          // }
 
-            createEntry(
-              firstName,
-              lastName,
-              amount,
-            ).then((entryResponse) {
-              setState(() {
-                // fetchDatafordate(DateTime.now());
-              });
-              // Handle the response as needed
-            }).catchError((error) {
-              // Handle errors
-              if (firstName.isNotEmpty &&
-                  lastName.isNotEmpty &&
-                  amount.isNotEmpty) {
+          // clearText();
+          if (_selectedOption == "New Entry" &&
+              firstName.isNotEmpty &&
+              lastName.isNotEmpty &&
+              amount.isNotEmpty) {
+            // Check if the user already exists
+            if (_checkUserExists(firstName, lastName)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content:
+                      Text('User already exists. Please create a new one.'),
+                ),
+              );
+            } else {
+              // Call the createEntry function to post the data
+              createEntry(firstName, lastName, amount).then((entryResponse) {
+                // Handle the response as needed
+                // Navigate to AddEntryScreen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEntryScreen(),
+                  ),
+                );
+              }).catchError((error) {
+                // Handle errors
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEntryScreen(),
+                  ),
+                );
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Entry Added Successfully.')));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Please fill in all required fields.')));
-              }
-            });
-          } else if (_selectedOption == "Old Entry") {
-            // Call the oldEntry function
+                  const SnackBar(content: Text('Entry added successfully')),
+                );
+              });
+            }
+          } else if (_selectedOption == "Old Entry" &&
+              selectedName.isNotEmpty &&
+              amount.isNotEmpty) {
             oldEntry(
-                    amount: _amountController.text,
-                    selectedName: selectedName,
-                    selectedId: selectedUserId)
-                .then((entryResponse) {
-              setState(() {
-                fetchData(selectedName);
-                // Navigator.pop(context);
-                if (amount.isNotEmpty &&
-                    selectedName.isNotEmpty &&
-                    amount.isNotEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Entry Added Successfully.')));
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Please fill in all required fields.')));
-                }
-              });
+              amount: _amountController.text,
+              selectedName: selectedName,
+              selectedId: selectedUserId,
+            ).then((entryResponse) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddEntryScreen(),
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Entry Added Successfully.')),
+              );
             }).catchError((error) {
               // Handle errors
-              if (amount.isNotEmpty &&
-                  selectedName.isNotEmpty &&
-                  amount.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Entry Added Successfully.')));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Please fill in all required fields.')));
-              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Failed to add entry.')),
+              );
             });
           } else {
-            // Handle other cases or show an error message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Add all required fields.')),
+            );
           }
+
           clearText();
         },
       ),
     );
+  }
+
+  bool _checkUserExists(String firstName, String lastName) {
+    for (Datum datum in allData) {
+      if (datum.firstName == firstName && datum.lastName == lastName) {
+        return true; // User already exists
+      }
+    }
+    return false; // User does not exist
+  }
+
+  Future<void> showUninstallConfirmationDialog(BuildContext context) async {
+    final bool confirmUninstall = await showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Uninstall App"),
+          content: const Text("Are you sure you want to uninstall this app?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false);
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true);
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmUninstall == true) {
+      final packageName =
+          'com.example.d_app'; // Replace with your app's package name
+      final intent = AndroidIntent(
+        action: 'android.intent.action.DELETE',
+        data: 'package:$packageName',
+        package: packageName,
+        flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
+      );
+      await intent.launch();
+    }
   }
 }

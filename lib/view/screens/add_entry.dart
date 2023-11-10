@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
+import 'package:d_app/view/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:d_app/utils/constant.dart';
@@ -14,14 +15,14 @@ import 'package:intl/intl.dart';
 
 import '../../model/date_model.dart';
 
-class SerachScreen extends StatefulWidget {
-  const SerachScreen({Key? key}) : super(key: key);
+class AddEntryScreen extends StatefulWidget {
+  const AddEntryScreen({Key? key}) : super(key: key);
 
   @override
-  _SerachScreenState createState() => _SerachScreenState();
+  _AddEntryScreenState createState() => _AddEntryScreenState();
 }
 
-class _SerachScreenState extends State<SerachScreen> {
+class _AddEntryScreenState extends State<AddEntryScreen> {
   TextEditingController _searchController = TextEditingController();
   String openingBalance = '';
   String closingBalance = '';
@@ -105,7 +106,11 @@ class _SerachScreenState extends State<SerachScreen> {
           elevation: 0,
           leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                    ));
               },
               icon: Image.asset(
                 'images/back_arrow.png',
@@ -292,7 +297,10 @@ class _SerachScreenState extends State<SerachScreen> {
                         final transactionItem = date1!.data[index];
                         final transactionType = transactionItem.trnxType;
                         final amount = transactionItem.amount;
-                        final name = transactionItem.userDetail[0].firstName;
+
+                        final name = transactionItem.userDetail[0].firstName +
+                            " " +
+                            transactionItem.userDetail[0].lastName;
 
                         return Container(
                           height: 50,
@@ -303,7 +311,7 @@ class _SerachScreenState extends State<SerachScreen> {
                           child: Row(
                             children: [
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -321,7 +329,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                 // width: 10,
                               ),
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -329,7 +337,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                   child: TextWidget(
                                       text: name,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 12,
+                                      textsize: 14,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -338,7 +346,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                 thickness: 1,
                               ),
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -348,7 +356,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.greenColor,
-                                      textsize: 12,
+                                      textsize: 14,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -357,7 +365,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                 thickness: 1,
                               ),
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -367,7 +375,7 @@ class _SerachScreenState extends State<SerachScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.redColor,
-                                      textsize: 12,
+                                      textsize: 14,
                                       textweight: FontWeight.w600),
                                 ),
                               )

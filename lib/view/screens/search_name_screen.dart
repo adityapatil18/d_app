@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import '../../model/all_data.dart';
-import '../../model/transaction_by_user_model.dart';
+import '../../model/get_all_data.dart';
 import '../../utils/constant.dart';
 import '../custom_widgets/text_widget.dart';
 
@@ -232,15 +232,21 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                             tileColor: index.isEven
                                 ? MyAppColor.grey2Color
                                 : Colors.white,
-                            title: Text(searchResults[index].fullName),
+                            title: Text(searchResults[index].firstName +
+                                " " +
+                                searchResults[index].lastName),
                             onTap: () {
                               // Handle the selection of the name here
 
                               // Clear the search results and hide the ListView
                               setState(() {
                                 _searchNameController.text =
-                                    searchResults[index].fullName;
-                                selectedName = searchResults[index].firstName;
+                                    searchResults[index].firstName +
+                                        " " +
+                                        searchResults[index].lastName;
+                                selectedName = searchResults[index].firstName +
+                                    " " +
+                                    searchResults[index].lastName;
                                 selectedUserId = searchResults[index].id;
                                 fetchTransactionsForUser(selectedUserId);
                                 searchResults.clear();
@@ -272,7 +278,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                           child: Row(
                             children: [
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -290,7 +296,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 // width: 10,
                               ),
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -298,7 +304,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                   child: TextWidget(
                                       text: selectedName,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 12,
+                                      textsize: 14,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -307,7 +313,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 thickness: 1,
                               ),
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -317,7 +323,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.greenColor,
-                                      textsize: 12,
+                                      textsize: 14,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -326,7 +332,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                 thickness: 1,
                               ),
                               Expanded(
-                                flex: 1,
+                                // flex: 1,
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -336,7 +342,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.redColor,
-                                      textsize: 12,
+                                      textsize: 14,
                                       textweight: FontWeight.w600),
                                 ),
                               )

@@ -3,8 +3,9 @@ import 'package:android_intent_plus/flag.dart';
 import 'package:d_app/utils/constant.dart';
 import 'package:d_app/view/custom_widgets/custom_container.dart';
 import 'package:d_app/view/custom_widgets/text_widget.dart';
+import 'package:d_app/view/screens/search_date_screen.dart';
 import 'package:d_app/view/screens/search_name_screen.dart';
-import 'package:d_app/view/screens/search_screen.dart';
+import 'package:d_app/view/screens/add_entry.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SerachScreen(),
+                          builder: (context) => AddEntryScreen(),
                         ));
                   }),
               SizedBox(
@@ -50,8 +51,20 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 20,
+            height: 40,
           ),
+          CustomContainer(
+              borderRadius: BorderRadius.circular(15),
+              imagePath: 'images/search_date.png',
+              text: 'Search by Date',
+              border: Border.all(color: Colors.red),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchDateScreen(),
+                    ));
+              }),
           SizedBox(
             height: 100,
           ),

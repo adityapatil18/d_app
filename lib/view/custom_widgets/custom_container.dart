@@ -9,8 +9,8 @@ class CustomContainer extends StatelessWidget {
       required this.imagePath,
       required this.text,
       required this.onTap,
-      required this.borderRadius, required this.border
-      });
+      required this.borderRadius,
+      required this.border});
   final String imagePath;
   final String text;
   final Function onTap;
@@ -23,8 +23,7 @@ class CustomContainer extends StatelessWidget {
       child: Container(
         width: 131,
         height: 115,
-        decoration: BoxDecoration(borderRadius: borderRadius,border: border),
-        
+        decoration: BoxDecoration(borderRadius: borderRadius, border: border),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -36,7 +35,7 @@ class CustomContainer extends StatelessWidget {
             TextWidget(
                 text: text,
                 textcolor: MyAppColor.textClor,
-                textsize: 14,
+                textsize: 15,
                 textweight: FontWeight.w600)
           ],
         ),
