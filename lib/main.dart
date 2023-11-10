@@ -21,7 +21,7 @@ class DAPP extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: AppBarTheme(elevation: 0, color: Colors.white),
           textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
-      home: HomeScreen(),
+      home: SignupScreen(),
     );
   }
 }
