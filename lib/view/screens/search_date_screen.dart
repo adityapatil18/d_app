@@ -20,6 +20,7 @@ class SearchDateScreen extends StatefulWidget {
 }
 
 class _SearchDateScreenState extends State<SearchDateScreen> {
+  String buttonText = 'Choose Date';
   DateTime? selectedDate;
   List<Dataitem> transactions = [];
   Transaction? transaction;
@@ -157,13 +158,15 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                     if (pickedDate != null) {
                       setState(() {
                         selectedDate = pickedDate;
+                        buttonText =
+                            DateFormat('yyyy-MM-dd').format(selectedDate!);
                       });
                       _searchTransactionsByDate();
                       print("Selected date: $pickedDate");
                     }
                   },
                   child: TextWidget(
-                      text: 'Choose Date',
+                      text: buttonText,
                       textcolor: MyAppColor.mainBlueColor,
                       textsize: 16,
                       textweight: FontWeight.w700),

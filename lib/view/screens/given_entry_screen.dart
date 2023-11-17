@@ -593,9 +593,22 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     );
   }
 
+  // bool _checkUserExists(String firstName, String lastName) {
+  //   for (Datum datum in allData) {
+  //     if (datum.firstName == firstName && datum.lastName == lastName) {
+  //       return true; // User already exists
+  //     }
+  //   }
+  //   return false; // User does not exist
+  // }
   bool _checkUserExists(String firstName, String lastName) {
+    // Convert names to lowercase for case-insensitive comparison
+    String lowerCaseFirstName = firstName.toLowerCase();
+    String lowerCaseLastName = lastName.toLowerCase();
+
     for (Datum datum in allData) {
-      if (datum.firstName == firstName && datum.lastName == lastName) {
+      if (datum.firstName.toLowerCase() == lowerCaseFirstName &&
+          datum.lastName.toLowerCase() == lowerCaseLastName) {
         return true; // User already exists
       }
     }

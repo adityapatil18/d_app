@@ -21,8 +21,8 @@ class CustomContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        width: 131,
-        height: 115,
+        width: 135,
+        height: 120,
         decoration: BoxDecoration(borderRadius: borderRadius, border: border),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -35,7 +35,7 @@ class CustomContainer extends StatelessWidget {
             TextWidget(
                 text: text,
                 textcolor: MyAppColor.textClor,
-                textsize: 15,
+                textsize: 14,
                 textweight: FontWeight.w600)
           ],
         ),

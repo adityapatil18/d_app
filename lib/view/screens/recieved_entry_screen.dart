@@ -399,128 +399,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           final firstName = _receivedFirstNameController.text;
           final lastName = _receivedLastNameController.text;
           final amount = _amountController.text;
-          // if (_selectedOption == "New Entry") {
-          //   // Call the createEntry function to post the data
 
-          //   createEntry(
-          //     firstName,
-          //     lastName,
-          //     amount,
-          //   ).then((entryResponse) {
-          //     // Handle the response as needed
-          //   }).catchError((error) {
-          //     // Handle errors
-          //     if (firstName.isNotEmpty &&
-          //         lastName.isNotEmpty &&
-          //         amount.isNotEmpty) {
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //           const SnackBar(content: Text('Entry Added Successfully.')));
-          //       Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => AddEntryScreen(),
-          //           ));
-          //     } else {
-          //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //           content: Text('Please fill in all required fields.')));
-          //     }
-          //   });
-          // } else if (_selectedOption == "Old Entry") {
-          //   // Call the oldEntry function
-          //   oldEntry(
-          //           amount: _amountController.text,
-          //           selectedName: selectedName,
-          //           selectedId: selectedUserId)
-          //       .then((entryResponse) {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ));
-          //     setState(() {
-          //       fetchData(selectedName);
-          //       // Navigator.pop(context);
-          //       if (amount.isNotEmpty &&
-          //           selectedName.isNotEmpty &&
-          //           amount.isNotEmpty) {
-          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //             content: Text('Entry Added Successfully.')));
-          //       } else {
-          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //             content: Text('Please fill in all required fields.')));
-          //       }
-          //     });
-          //   }).catchError((error) {
-          //     // Handle errors
-          //     if (amount.isNotEmpty &&
-          //         selectedName.isNotEmpty &&
-          //         amount.isNotEmpty) {
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //           const SnackBar(content: Text('Entry Added Successfully.')));
-          //     } else {
-          //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //           content: Text('Please fill in all required fields.')));
-          //     }
-          //   });
-          // } else {
-          //   // Handle other cases or show an error message
-          // }
-          // clearText();
-          // if (firstName.isNotEmpty &&
-          //     lastName.isNotEmpty &&
-          //     amount.isNotEmpty) {
-          //   // Check if the user already exists
-          //   if (_selectedOption == "New Entry" &&
-          //       _checkUserExists(firstName, lastName)) {
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       const SnackBar(
-          //           content:
-          //               Text('User already exists. Please create a new one.')),
-          //     );
-          //   } else {
-          //     // Call the createEntry function to post the data
-          //     createEntry(firstName, lastName, amount).then((entryResponse) {
-          //       // Handle the response as needed
-          //       // Navigate to AddEntryScreen
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ),
-          //       );
-          //     }).catchError((error) {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ),
-          //       );
-          //       // Handle errors
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //         const SnackBar(content: Text('Entry added succesfully')),
-          //       );
-          //     });
-          //   }
-          // } else if (_selectedOption == "Old Entry") {
-          //   oldEntry(
-          //           amount: _amountController.text,
-          //           selectedName: selectedName,
-          //           selectedId: selectedUserId)
-          //       .then((entryResponse) {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ));
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //         const SnackBar(content: Text('Entry Added Successfully.')));
-          //   });
-          // } else {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //       const SnackBar(content: Text('Add all required fields.')));
-          // }
-
-          // clearText();
           if (_selectedOption == "New Entry" &&
               firstName.isNotEmpty &&
               lastName.isNotEmpty &&
@@ -592,9 +471,23 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
     );
   }
 
+  // bool _checkUserExists(String firstName, String lastName) {
+  //   for (Datum datum in allData) {
+  //     if (datum.firstName == firstName && datum.lastName == lastName) {
+  //       return true; // User already exists
+  //     }
+  //   }
+  //   return false; // User does not exist
+  // }
+
   bool _checkUserExists(String firstName, String lastName) {
+    // Convert names to lowercase for case-insensitive comparison
+    String lowerCaseFirstName = firstName.toLowerCase();
+    String lowerCaseLastName = lastName.toLowerCase();
+
     for (Datum datum in allData) {
-      if (datum.firstName == firstName && datum.lastName == lastName) {
+      if (datum.firstName.toLowerCase() == lowerCaseFirstName &&
+          datum.lastName.toLowerCase() == lowerCaseLastName) {
         return true; // User already exists
       }
     }
