@@ -287,6 +287,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                               ),
                               TextField(
                                 controller: _amountController,
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     hintText: 'Enter Amount',
                                     border: OutlineInputBorder(
@@ -368,6 +369,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                       height: 5,
                     ),
                     TextField(
+                      keyboardType: TextInputType.number,
                       controller: _amountController,
                       decoration: InputDecoration(
                           hintText: 'Enter Amount',

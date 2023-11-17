@@ -286,6 +286,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                               ),
                               TextField(
                                 controller: _amountController,
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     hintText: 'Enter Amount',
                                     border: OutlineInputBorder(
@@ -368,6 +369,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                     ),
                     TextField(
                       controller: _amountController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           hintText: 'Enter Amount',
                           border: OutlineInputBorder(
