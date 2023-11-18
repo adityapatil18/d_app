@@ -171,7 +171,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
               height: 40,
             ),
             const TextWidget(
-                text: 'RECEIVED ENTRY',
+                text: 'GIVEN ENTRY',
                 textcolor: MyAppColor.greenColor,
                 textsize: 22,
                 textweight: FontWeight.w700),
