@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
-import 'package:d_app/view/screens/search_name_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import '../../model/all_data.dart';
 import '../../model/given_entry_model.dart';
-import '../../model/recived_entry_model.dart';
 import '../../utils/constant.dart';
 import '../custom_widgets/dateSelection_container.dart';
 import '../custom_widgets/text_field.dart';

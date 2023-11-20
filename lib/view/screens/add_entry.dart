@@ -23,7 +23,6 @@ class AddEntryScreen extends StatefulWidget {
 }
 
 class _AddEntryScreenState extends State<AddEntryScreen> {
-  TextEditingController _searchController = TextEditingController();
   String openingBalance = '';
   String closingBalance = '';
   List<Datum> allData = []; // Create a list to store transaction data

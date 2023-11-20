@@ -1,8 +1,6 @@
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
-import 'package:d_app/utils/constant.dart';
 import 'package:d_app/view/custom_widgets/custom_container.dart';
-import 'package:d_app/view/custom_widgets/text_widget.dart';
 import 'package:d_app/view/screens/search_date_screen.dart';
 import 'package:d_app/view/screens/search_name_screen.dart';
 import 'package:d_app/view/screens/add_entry.dart';

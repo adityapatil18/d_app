@@ -1,6 +1,4 @@
-import 'package:d_app/view/screens/home_screen.dart';
-import 'package:d_app/view/screens/search_name_screen.dart';
-import 'package:d_app/view/screens/add_entry.dart';
+
 import 'package:d_app/view/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
