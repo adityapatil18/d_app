@@ -69,34 +69,34 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
     }
   }
 
-  void _recivedPopUp() {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return Container(
-            height: MediaQuery.sizeOf(context).height / 1.5,
-            width: MediaQuery.sizeOf(context).width,
-            child: RecivedEntryScreen());
-      },
-    );
-    setState(() {
-      fetchDatafordate(DateTime.now());
-    });
-  }
+  // void _recivedPopUp() {
+  //   showModalBottomSheet<void>(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     builder: (context) {
+  //       return Container(
+  //           height: MediaQuery.sizeOf(context).height / 1.5,
+  //           width: MediaQuery.sizeOf(context).width,
+  //           child: RecivedEntryScreen());
+  //     },
+  //   );
+  //   setState(() {
+  //     fetchDatafordate(DateTime.now());
+  //   });
+  // }
 
-  void _givenPopUp() {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return Container(
-            width: MediaQuery.sizeOf(context).width,
-            height: MediaQuery.sizeOf(context).height / 1.5,
-            child: GivenEntryScreen());
-      },
-    );
-  }
+  // void _givenPopUp() {
+  //   showModalBottomSheet<void>(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     builder: (context) {
+  //       return Container(
+  //           width: MediaQuery.sizeOf(context).width,
+  //           height: MediaQuery.sizeOf(context).height / 1.5,
+  //           child: GivenEntryScreen());
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -190,42 +190,6 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                   SizedBox(
                     height: 40,
                   ),
-                  // Container(
-                  //   margin: EdgeInsets.only(top: 15, bottom: 15),
-                  //   height: 50,
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     border: Border.all(
-                  //       color: Colors.black,
-                  //     ),
-                  //     borderRadius: BorderRadius.all(
-                  //       Radius.circular(10),
-                  //     ),
-                  //   ),
-                  //   child: Container(
-                  //     height: 100,
-                  //     child: TextField(
-                  //       textInputAction: TextInputAction.search,
-                  //       controller: _searchController,
-                  //       onSubmitted: (value) {
-                  //         setState(() {
-                  //           Loader = true;
-                  //         });
-                  //       },
-                  //       keyboardType: TextInputType.name,
-                  //       style: const TextStyle(
-                  //         color: Colors.black,
-                  //       ),
-                  //       decoration: InputDecoration(
-                  //         border: InputBorder.none,
-                  //         hintText: "  Search by name, or amount",
-                  //         hintStyle:  TextStyle(
-                  //           color: Colors.black.withOpacity(0.54),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   Container(
                     height: 50,
                     width: MediaQuery.sizeOf(context).width,
@@ -267,6 +231,18 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                             alignment: Alignment.center,
                             width: MediaQuery.sizeOf(context).width * 0.25,
                             child: const TextWidget(
+                                text: 'Remark',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
                                 text: 'Received',
                                 textcolor: Colors.white,
                                 textsize: 12,
@@ -296,6 +272,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                         final transactionItem = date1!.data[index];
                         final transactionType = transactionItem.trnxType;
                         final amount = transactionItem.amount;
+                        final remark = transactionItem.remark;
 
                         final name = transactionItem.userDetail[0].firstName +
                             " " +
@@ -318,8 +295,8 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                   child: TextWidget(
                                       text: selectedDate,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 12,
-                                      textweight: FontWeight.w600),
+                                      textsize: 11,
+                                      textweight: FontWeight.w700),
                                 ),
                               ),
                               const VerticalDivider(
@@ -336,7 +313,24 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                   child: TextWidget(
                                       text: name,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 14,
+                                      textsize: 13,
+                                      textweight: FontWeight.w600),
+                                ),
+                              ),
+                              const VerticalDivider(
+                                color: Colors.black,
+                                thickness: 1,
+                              ),
+                              Expanded(
+                                // flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
+                                  child: TextWidget(
+                                      text: remark,
+                                      textcolor: MyAppColor.textClor,
+                                      textsize: 13,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -355,7 +349,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.greenColor,
-                                      textsize: 14,
+                                      textsize: 13,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -374,7 +368,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.redColor,
-                                      textsize: 14,
+                                      textsize: 13,
                                       textweight: FontWeight.w600),
                                 ),
                               )
@@ -399,7 +393,10 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
           children: [
             CustomGradientButton(
               onPressed: () {
-                _recivedPopUp();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RecivedEntryScreen()));
               },
               buttonText: 'Received',
               containerColor: Color(0xFFF0D963),
@@ -407,7 +404,10 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
             ),
             CustomGradientButton(
               onPressed: () {
-                _givenPopUp();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GivenEntryScreen()));
               },
               buttonText: 'Given',
               containerColor: Color(0xFFF0D963),

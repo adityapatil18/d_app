@@ -4,66 +4,70 @@
 
 import 'dart:convert';
 
-Transaction transactionFromJson(String str) => Transaction.fromJson(json.decode(str));
+Transaction transactionFromJson(String str) =>
+    Transaction.fromJson(json.decode(str));
 
 String transactionToJson(Transaction data) => json.encode(data.toJson());
 
 class Transaction {
-    int status;
-    String message;
-    List<Dataitem> data;
-    int count;
-    Total total;
+  int status;
+  String message;
+  List<Dataitem> data;
+  int count;
+  Total total;
 
-    Transaction({
-        required this.status,
-        required this.message,
-        required this.data,
-        required this.count,
-        required this.total,
-    });
+  Transaction({
+    required this.status,
+    required this.message,
+    required this.data,
+    required this.count,
+    required this.total,
+  });
 
-    factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
+  factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
         status: json["status"],
         message: json["message"],
-        data: List<Dataitem>.from(json["data"].map((x) => Dataitem.fromJson(x))),
+        data:
+            List<Dataitem>.from(json["data"].map((x) => Dataitem.fromJson(x))),
         count: json["count"],
         total: Total.fromJson(json["total"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
         "count": count,
         "total": total.toJson(),
-    };
+      };
 }
 
 class Dataitem {
-    String id;
-    String userId;
-    String trnxType;
-    String amount;
-    String balanceBefore;
-    String balanceAfter;
-    String reference;
-    DateTime createdAt;
-    DateTime updatedAt;
+  String id;
+  String userId;
+  String trnxType;
+  String amount;
+  String balanceBefore;
+  String balanceAfter;
+  String reference;
+  DateTime createdAt;
+  DateTime updatedAt;
+  String remark;
 
-    Dataitem({
-        required this.id,
-        required this.userId,
-        required this.trnxType,
-        required this.amount,
-        required this.balanceBefore,
-        required this.balanceAfter,
-        required this.reference,
-        required this.createdAt,
-        required this.updatedAt,
-    });
+  Dataitem({
+    required this.id,
+    required this.userId,
+    required this.trnxType,
+    required this.amount,
+    required this.balanceBefore,
+    required this.balanceAfter,
+    required this.reference,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.remark,
+  });
 
-    factory Dataitem.fromJson(Map<String, dynamic> json) => Dataitem(
+  factory Dataitem.fromJson(Map<String, dynamic> json) => Dataitem(
         id: json["_id"],
         userId: json["userId"],
         trnxType: json["trnxType"],
@@ -73,9 +77,10 @@ class Dataitem {
         reference: json["reference"],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
-    );
+        remark: json["remark"],
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "_id": id,
         "userId": userId,
         "trnxType": trnxType,
@@ -85,25 +90,26 @@ class Dataitem {
         "reference": reference,
         "createdAt": createdAt.toIso8601String(),
         "updatedAt": updatedAt.toIso8601String(),
-    };
+        "remark": remark,
+      };
 }
 
 class Total {
-    String totalReceived;
-    String totalGiven;
+  String totalReceived;
+  String totalGiven;
 
-    Total({
-        required this.totalReceived,
-        required this.totalGiven,
-    });
+  Total({
+    required this.totalReceived,
+    required this.totalGiven,
+  });
 
-    factory Total.fromJson(Map<String, dynamic> json) => Total(
+  factory Total.fromJson(Map<String, dynamic> json) => Total(
         totalReceived: json["totalReceived"],
         totalGiven: json["totalGiven"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "totalReceived": totalReceived,
         "totalGiven": totalGiven,
-    };
+      };
 }

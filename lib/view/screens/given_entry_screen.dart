@@ -22,10 +22,12 @@ class GivenEntryScreen extends StatefulWidget {
 }
 
 class _GivenEntryScreenState extends State<GivenEntryScreen> {
-  TextEditingController _receivedFirstNameController = TextEditingController();
-  TextEditingController _receivedLastNameController = TextEditingController();
+  TextEditingController _givenFirstNameController = TextEditingController();
+  TextEditingController _givenLastNameController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   TextEditingController _searchNameController = TextEditingController();
+  TextEditingController _givenRemarkController = TextEditingController();
+
   String _selectedOption = "";
   List<Datum> allData = []; // List of data obtained from API
   List<Datum> searchResults = [];
@@ -42,6 +44,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     String firstName,
     String lastName,
     String amount,
+    String remark,
   ) async {
     final response = await http.post(
         Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
@@ -54,6 +57,8 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           "amount": amount,
           "type": "debit",
           "status": "1",
+          "remark": remark,
+          "date": "",
           "id": selectedUserId
         }));
     print(selectedUserId);
@@ -72,10 +77,12 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     }
   }
 
-  Future<GEntry> oldEntry(
-      {String selectedName = "",
-      String amount = "",
-      String selectedId = ""}) async {
+  Future<GEntry> oldEntry({
+    String selectedName = "",
+    String amount = "",
+    String selectedId = "",
+    String remark = "",
+  }) async {
     final response = await http.post(
         Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
         headers: <String, String>{
@@ -88,6 +95,8 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           "type": "debit",
           "status": "0",
           "Id": selectedId,
+          "remark": remark,
+          "date": ""
         }));
     print(amount);
     print(selectedId);
@@ -143,42 +152,61 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
 
   void clearText() {
     _amountController.clear();
-    _receivedFirstNameController.clear();
-    _receivedLastNameController.clear();
+    _givenFirstNameController.clear();
+    _givenLastNameController.clear();
     _searchNameController.clear();
+    _givenRemarkController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          showUninstallConfirmationDialog(context);
-        },
-        child: Image.asset(
-          'images/power.png',
-          width: 40,
-          height: 50,
-        ),
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEntryScreen(),
+                  ));
+            },
+            icon: Image.asset(
+              'images/back_arrow.png',
+            )),
+        leadingWidth: 50,
+        centerTitle: true,
+        title: const TextWidget(
+            text: 'GIVEN ENTRY',
+            textcolor: MyAppColor.redColor,
+            textsize: 22,
+            textweight: FontWeight.w700),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height: 40,
+              height: 10,
             ),
-            const TextWidget(
-                text: 'GIVEN ENTRY',
-                textcolor: MyAppColor.redColor,
-                textsize: 22,
-                textweight: FontWeight.w700),
+            GestureDetector(
+              onTap: () {
+                showUninstallConfirmationDialog(context);
+              },
+              child: Image.asset(
+                'images/power.png',
+                width: 40,
+                height: 50,
+              ),
+            ),
             SizedBox(
               height: 20,
             ),
             CustomDateSelectionContainer(
                 textColor: MyAppColor.mainBlueColor,
                 iconColor: MyAppColor.mainBlueColor),
+            SizedBox(
+              height: 20,
+            ),
             Row(
               children: [
                 Row(
@@ -247,7 +275,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                               ),
                               CustomTextField(
                                   hintText: 'Enter First Name',
-                                  controller: _receivedFirstNameController,
+                                  controller: _givenFirstNameController,
                                   keyboardType: TextInputType.text,
                                   inputFormatters: [
                                     FilteringTextInputFormatter
@@ -266,7 +294,26 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                               ),
                               CustomTextField(
                                   hintText: 'Enter Last Name',
-                                  controller: _receivedLastNameController,
+                                  controller: _givenLastNameController,
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .singleLineFormatter
+                                  ]),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              const TextWidget(
+                                  text: 'Remark',
+                                  textcolor: MyAppColor.textClor,
+                                  textsize: 14,
+                                  textweight: FontWeight.w600),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              CustomTextField(
+                                  hintText: 'Enter Remark',
+                                  controller: _givenRemarkController,
                                   keyboardType: TextInputType.text,
                                   inputFormatters: [
                                     FilteringTextInputFormatter
@@ -356,7 +403,25 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                         },
                       ),
                     SizedBox(
-                      height: 100,
+                      height: 150,
+                    ),
+                    const TextWidget(
+                        text: 'Remark',
+                        textcolor: MyAppColor.textClor,
+                        textsize: 14,
+                        textweight: FontWeight.w600),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                        hintText: 'Enter Remark',
+                        controller: _givenRemarkController,
+                        keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.singleLineFormatter
+                        ]),
+                    SizedBox(
+                      height: 15,
                     ),
                     const TextWidget(
                         text: 'Amount',
@@ -397,9 +462,10 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
               textweight: FontWeight.w600),
         ),
         onTap: () {
-          final firstName = _receivedFirstNameController.text;
-          final lastName = _receivedLastNameController.text;
+          final firstName = _givenFirstNameController.text;
+          final lastName = _givenLastNameController.text;
           final amount = _amountController.text;
+          final remark = _givenRemarkController.text;
           // if (_selectedOption == "New Entry") {
           //   // Call the createEntry function to post the data
 
@@ -525,6 +591,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           if (_selectedOption == "New Entry" &&
               firstName.isNotEmpty &&
               lastName.isNotEmpty &&
+              remark.isNotEmpty &&
               amount.isNotEmpty) {
             // Check if the user already exists
             if (_checkUserExists(firstName, lastName)) {
@@ -536,7 +603,8 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
               );
             } else {
               // Call the createEntry function to post the data
-              createEntry(firstName, lastName, amount).then((entryResponse) {
+              createEntry(firstName, lastName, amount, remark)
+                  .then((entryResponse) {
                 // Handle the response as needed
                 // Navigate to AddEntryScreen
                 Navigator.push(
@@ -560,9 +628,11 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
             }
           } else if (_selectedOption == "Old Entry" &&
               selectedName.isNotEmpty &&
+              remark.isNotEmpty &&
               amount.isNotEmpty) {
             oldEntry(
               amount: _amountController.text,
+              remark: _givenRemarkController.text,
               selectedName: selectedName,
               selectedId: selectedUserId,
             ).then((entryResponse) {

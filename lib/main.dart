@@ -1,4 +1,4 @@
-
+import 'package:d_app/view/screens/home_screen.dart';
 import 'package:d_app/view/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +19,7 @@ class DAPP extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: AppBarTheme(elevation: 0, color: Colors.white),
           textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
-      home: SignupScreen(),
+      home: HomeScreen(),
     );
   }
 }

@@ -26,6 +26,8 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   TextEditingController _receivedLastNameController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   TextEditingController _searchNameController = TextEditingController();
+  TextEditingController _receivedRemarkController = TextEditingController();
+
   String _selectedOption = "";
   List<Datum> allData = []; // List of data obtained from API
   List<Datum> searchResults = [];
@@ -42,6 +44,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
     String firstName,
     String lastName,
     String amount,
+    String remark,
   ) async {
     final response = await http.post(
         Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
@@ -54,7 +57,9 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           "amount": amount,
           "type": "credit",
           "status": "1",
-          "id": selectedUserId
+          "id": selectedUserId,
+          "remark": remark,
+          "date": "",
         }));
     print(selectedUserId);
     print('create entry api response:${response.body}');
@@ -62,7 +67,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
     if (response.statusCode == 200) {
       final entryResponse = REntry.fromJson(jsonDecode(response.body));
       if (entryResponse.id != null && entryResponse.id!.isNotEmpty) {
-        selectedUserId = entryResponse.id!;
+        // selectedUserId = entryResponse.id!;
         return entryResponse;
       } else {
         throw Exception('Failed to create entry. User ID not available.');
@@ -74,6 +79,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
 
   Future<REntry> oldEntry(
       {String selectedName = "",
+      String remark = "",
       String amount = "",
       String selectedId = ""}) async {
     final response = await http.post(
@@ -88,10 +94,13 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           "type": "credit",
           "status": "0",
           "Id": selectedId,
+          "remark": remark,
+          "date": "",
         }));
     print(amount);
     print(selectedId);
     print(selectedName);
+    print(remark);
     print('api response: ${response.body}');
 
     if (response.statusCode == 200) {
@@ -146,39 +155,58 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
     _receivedFirstNameController.clear();
     _receivedLastNameController.clear();
     _searchNameController.clear();
+    _receivedRemarkController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          showUninstallConfirmationDialog(context);
-        },
-        child: Image.asset(
-          'images/power.png',
-          width: 40,
-          height: 50,
-        ),
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEntryScreen(),
+                  ));
+            },
+            icon: Image.asset(
+              'images/back_arrow.png',
+            )),
+        leadingWidth: 50,
+        centerTitle: true,
+        title: const TextWidget(
+            text: 'RECEIVED ENTRY',
+            textcolor: MyAppColor.greenColor,
+            textsize: 22,
+            textweight: FontWeight.w700),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height: 40,
+              height: 10,
             ),
-            const TextWidget(
-                text: 'RECEIVED ENTRY',
-                textcolor: MyAppColor.greenColor,
-                textsize: 22,
-                textweight: FontWeight.w700),
+            GestureDetector(
+              onTap: () {
+                showUninstallConfirmationDialog(context);
+              },
+              child: Image.asset(
+                'images/power.png',
+                width: 40,
+                height: 50,
+              ),
+            ),
             SizedBox(
               height: 20,
             ),
             CustomDateSelectionContainer(
                 textColor: MyAppColor.mainBlueColor,
                 iconColor: MyAppColor.mainBlueColor),
+            SizedBox(
+              height: 20,
+            ),
             Row(
               children: [
                 Row(
@@ -276,6 +304,25 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                                 height: 15,
                               ),
                               const TextWidget(
+                                  text: 'Remark',
+                                  textcolor: MyAppColor.textClor,
+                                  textsize: 14,
+                                  textweight: FontWeight.w600),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              CustomTextField(
+                                  hintText: 'Enter Remark',
+                                  controller: _receivedRemarkController,
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .singleLineFormatter
+                                  ]),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              const TextWidget(
                                   text: 'Amount',
                                   textcolor: MyAppColor.textClor,
                                   textsize: 14,
@@ -356,7 +403,25 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                         },
                       ),
                     SizedBox(
-                      height: 100,
+                      height: 150,
+                    ),
+                    const TextWidget(
+                        text: 'Remark',
+                        textcolor: MyAppColor.textClor,
+                        textsize: 14,
+                        textweight: FontWeight.w600),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextField(
+                        hintText: 'Enter Remark',
+                        controller: _receivedRemarkController,
+                        keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.singleLineFormatter
+                        ]),
+                    SizedBox(
+                      height: 15,
                     ),
                     const TextWidget(
                         text: 'Amount',
@@ -400,10 +465,12 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           final firstName = _receivedFirstNameController.text;
           final lastName = _receivedLastNameController.text;
           final amount = _amountController.text;
+          final remark = _receivedRemarkController.text;
 
           if (_selectedOption == "New Entry" &&
               firstName.isNotEmpty &&
               lastName.isNotEmpty &&
+              remark.isNotEmpty &&
               amount.isNotEmpty) {
             // Check if the user already exists
             if (_checkUserExists(firstName, lastName)) {
@@ -415,7 +482,8 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
               );
             } else {
               // Call the createEntry function to post the data
-              createEntry(firstName, lastName, amount).then((entryResponse) {
+              createEntry(firstName, lastName, amount, remark)
+                  .then((entryResponse) {
                 // Handle the response as needed
                 // Navigate to AddEntryScreen
                 Navigator.push(
@@ -439,9 +507,11 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
             }
           } else if (_selectedOption == "Old Entry" &&
               selectedName.isNotEmpty &&
+              remark.isNotEmpty &&
               amount.isNotEmpty) {
             oldEntry(
               amount: _amountController.text,
+              remark: _receivedRemarkController.text,
               selectedName: selectedName,
               selectedId: selectedUserId,
             ).then((entryResponse) {

@@ -48,6 +48,7 @@ class Datum {
   String balanceBefore;
   String balanceAfter;
   String reference;
+  String remark;
   DateTime createdAt;
   DateTime updatedAt;
   int v;
@@ -61,6 +62,7 @@ class Datum {
     required this.balanceBefore,
     required this.balanceAfter,
     required this.reference,
+    required this.remark,
     required this.createdAt,
     required this.updatedAt,
     required this.v,
@@ -75,6 +77,7 @@ class Datum {
         balanceBefore: json["balanceBefore"],
         balanceAfter: json["balanceAfter"],
         reference: json["reference"],
+        remark: json["remark"],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
         v: json["__v"],
@@ -90,6 +93,7 @@ class Datum {
         "balanceBefore": balanceBefore,
         "balanceAfter": balanceAfter,
         "reference": reference,
+        "remark": remark,
         "createdAt": createdAt.toIso8601String(),
         "updatedAt": updatedAt.toIso8601String(),
         "__v": v,

@@ -198,6 +198,18 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                             alignment: Alignment.center,
                             width: MediaQuery.sizeOf(context).width * 0.25,
                             child: const TextWidget(
+                                text: 'Remark',
+                                textcolor: Colors.white,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: const TextWidget(
                                 text: 'Received',
                                 textcolor: Colors.white,
                                 textsize: 12,
@@ -267,6 +279,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                             .toString()
                             .substring(0, 10);
                         final transactionType = transactionItem.trnxType;
+                        final remark = transactionItem.remark;
                         final amount = transactionItem.amount;
 
                         return Container(
@@ -286,8 +299,8 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                   child: TextWidget(
                                       text: '${date}',
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 12,
-                                      textweight: FontWeight.w600),
+                                      textsize: 11,
+                                      textweight: FontWeight.w700),
                                 ),
                               ),
                               const VerticalDivider(
@@ -304,7 +317,24 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                   child: TextWidget(
                                       text: selectedName,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 14,
+                                      textsize: 13,
+                                      textweight: FontWeight.w600),
+                                ),
+                              ),
+                              const VerticalDivider(
+                                color: Colors.black,
+                                thickness: 1,
+                              ),
+                              Expanded(
+                                // flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.25,
+                                  child: TextWidget(
+                                      text: remark,
+                                      textcolor: MyAppColor.textClor,
+                                      textsize: 13,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -323,7 +353,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.greenColor,
-                                      textsize: 14,
+                                      textsize: 13,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -342,7 +372,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.redColor,
-                                      textsize: 14,
+                                      textsize: 13,
                                       textweight: FontWeight.w600),
                                 ),
                               )
