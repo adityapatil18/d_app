@@ -26,17 +26,17 @@ class _SignupScreenState extends State<SignupScreen> {
     void initState() {
       super.initState();
       // Retrieve user ID from SharedPreferences, if available
-      SharedPreferencesHelper.getUserId().then((userId) {
-        if (userId != null) {
-          // Navigate to HomeScreen as the user is already logged in
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(),
-            ),
-          );
-        }
-      });
+      // SharedPreferencesHelper.getUserId().then((userId) {
+      //   if (userId != null) {
+      //     // Navigate to HomeScreen as the user is already logged in
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => HomeScreen(),
+      //       ),
+      //     );
+      //   }
+      // });
     }
 
     Future<void> login(String email, String password) async {
@@ -55,7 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
           final userId = data['data']['_id']; // Corrected
 
           // Save the user ID in SharedPreferences when login is successful
-          SharedPreferencesHelper.saveUserId(userId);
+          await SharedPreferencesHelper.saveUserId(userId);
 
           print('User ID: $userId');
           print('Login successfully');

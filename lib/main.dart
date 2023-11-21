@@ -16,10 +16,11 @@ class DAPP extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           appBarTheme: AppBarTheme(elevation: 0, color: Colors.white),
           textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
-      home: HomeScreen(),
+      home: SignupScreen(),
     );
   }
 }

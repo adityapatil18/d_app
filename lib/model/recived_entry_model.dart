@@ -13,6 +13,7 @@ class REntry {
   String? id;
   String? remark;
   String? date;
+  String? createdId;
 
   REntry({
     required this.firstName,
@@ -23,6 +24,7 @@ class REntry {
     required this.id,
     required this.remark,
     required this.date,
+    required this.createdId,
   });
 
   factory REntry.fromJson(Map<String, dynamic> json) => REntry(
@@ -34,6 +36,7 @@ class REntry {
         id: json["Id"],
         remark: json["remark"],
         date: json["date"],
+        createdId: json["createdId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +48,6 @@ class REntry {
         "Id": id,
         "remark": remark,
         "date": date,
+        "createdId": createdId,
       };
 }

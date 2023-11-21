@@ -57,6 +57,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
         setState(() {
           openingBalance = date.total.openingBalance;
           closingBalance = date.total.closingBalance;
+
           date1 = dateFromJson(jsonEncode(jsonData));
         });
       } else {
@@ -295,7 +296,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                   child: TextWidget(
                                       text: selectedDate,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 11,
+                                      textsize: 10,
                                       textweight: FontWeight.w700),
                                 ),
                               ),
@@ -313,7 +314,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                   child: TextWidget(
                                       text: name,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -328,9 +329,10 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                   width:
                                       MediaQuery.sizeOf(context).width * 0.25,
                                   child: TextWidget(
-                                      text: remark,
+                                      text:
+                                          "$remark-(${transactionItem.adminDetail[0].identity})",
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -349,7 +351,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.greenColor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -368,7 +370,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.redColor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               )

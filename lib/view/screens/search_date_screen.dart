@@ -284,7 +284,7 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                                         text: DateFormat('yyyy-MM-dd')
                                             .format(transactionItem.createdAt),
                                         textcolor: MyAppColor.textClor,
-                                        textsize: 11,
+                                        textsize: 10,
                                         textweight: FontWeight.w700,
                                       ),
                                     ),
@@ -303,7 +303,7 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                                         // text: transactionItem.userDetail[0].firstName,
                                         text: name,
                                         textcolor: MyAppColor.textClor,
-                                        textsize: 13,
+                                        textsize: 12,
                                         textweight: FontWeight.w600,
                                       ),
                                     ),
@@ -320,9 +320,10 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                                       child: TextWidget(
                                         // Replace 'Name' with the actual property you want to display
                                         // text: transactionItem.userDetail[0].firstName,
-                                        text: remark,
+                                        text:
+                                            "$remark-(${transactionItem.adminDetail[0].identity})",
                                         textcolor: MyAppColor.textClor,
-                                        textsize: 13,
+                                        textsize: 12,
                                         textweight: FontWeight.w600,
                                       ),
                                     ),
@@ -342,7 +343,7 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                                             ? amount
                                             : '',
                                         textcolor: MyAppColor.greenColor,
-                                        textsize: 13,
+                                        textsize: 12,
                                         textweight: FontWeight.w600,
                                       ),
                                     ),
@@ -362,7 +363,7 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                                             ? amount
                                             : '',
                                         textcolor: MyAppColor.redColor,
-                                        textsize: 13,
+                                        textsize: 12,
                                         textweight: FontWeight.w600,
                                       ),
                                     ),

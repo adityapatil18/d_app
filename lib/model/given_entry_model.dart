@@ -13,6 +13,7 @@ class GEntry {
   String? id;
   String? remark;
   String? date;
+  String? createdId;
 
   GEntry({
     required this.firstName,
@@ -23,6 +24,7 @@ class GEntry {
     required this.id,
     required this.remark,
     required this.date,
+    required this.createdId,
   });
 
   factory GEntry.fromJson(Map<String, dynamic> json) => GEntry(
@@ -34,6 +36,7 @@ class GEntry {
         id: json["Id"],
         remark: json["remark"],
         date: json["date"],
+        createdId: json["createdId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +48,6 @@ class GEntry {
         "Id": id,
         "remark": remark,
         "date": date,
+        "createdId": createdId,
       };
 }

@@ -5,6 +5,7 @@ import 'package:android_intent_plus/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/all_data.dart';
 import '../../model/given_entry_model.dart';
@@ -40,12 +41,28 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     fetchData(""); // Fetch data from the API when the screen loads
   }
 
+  Future<void> getStoredUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final storedUserId = prefs.getString("userId");
+    if (storedUserId != null && storedUserId.isNotEmpty) {
+      // Use the stored userId as needed
+      print('Stored User ID: $storedUserId');
+    } else {
+      print('User ID not found in SharedPreferences');
+    }
+  }
+
   Future<GEntry> createEntry(
     String firstName,
     String lastName,
     String amount,
     String remark,
   ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final storedUserId = prefs.getString("userId");
+    if (storedUserId == null || storedUserId.isEmpty) {
+      throw Exception('User ID not found in SharedPreferences');
+    }
     final response = await http.post(
         Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
         headers: <String, String>{
@@ -59,7 +76,8 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           "status": "1",
           "remark": remark,
           "date": "",
-          "id": selectedUserId
+          "id": selectedUserId,
+          "createdId": storedUserId,
         }));
     print(selectedUserId);
     print('create entry api response:${response.body}');
@@ -83,6 +101,11 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     String selectedId = "",
     String remark = "",
   }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final storedUserId = prefs.getString("userId");
+    if (storedUserId == null || storedUserId.isEmpty) {
+      throw Exception('User ID not found in SharedPreferences');
+    }
     final response = await http.post(
         Uri.parse('https://appapi.techgigs.in/api/transaction/transfer'),
         headers: <String, String>{
@@ -96,7 +119,8 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           "status": "0",
           "Id": selectedId,
           "remark": remark,
-          "date": ""
+          "date": "",
+          "createdId": storedUserId,
         }));
     print(amount);
     print(selectedId);
@@ -331,6 +355,10 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                                 height: 5,
                               ),
                               TextField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'\d+')),
+                                ],
                                 controller: _amountController,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
@@ -369,7 +397,9 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                         FilteringTextInputFormatter.singleLineFormatter
                       ],
                       onChanged: (query) {
-                        searchResults = searchNames(query);
+                        setState(() {
+                          searchResults = searchNames(query);
+                        });
                       },
                     ),
                     if (searchResults.isNotEmpty)
@@ -385,13 +415,13 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                                 " " +
                                 searchResults[index].lastName),
                             onTap: () {
-                              // Handle the selection of the name here
-                              _searchNameController.text =
-                                  searchResults[index].firstName +
-                                      " " +
-                                      searchResults[index].lastName;
                               // Clear the search results and hide the ListView
                               setState(() {
+                                // Handle the selection of the name here
+                                _searchNameController.text =
+                                    searchResults[index].firstName +
+                                        " " +
+                                        searchResults[index].lastName;
                                 selectedName = searchResults[index].firstName +
                                     " " +
                                     searchResults[index].lastName;
@@ -432,6 +462,9 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
                       height: 5,
                     ),
                     TextField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'\d+')),
+                      ],
                       keyboardType: TextInputType.number,
                       controller: _amountController,
                       decoration: InputDecoration(
@@ -466,128 +499,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           final lastName = _givenLastNameController.text;
           final amount = _amountController.text;
           final remark = _givenRemarkController.text;
-          // if (_selectedOption == "New Entry") {
-          //   // Call the createEntry function to post the data
 
-          //   createEntry(
-          //     firstName,
-          //     lastName,
-          //     amount,
-          //   ).then((entryResponse) {
-          //     // Handle the response as needed
-          //   }).catchError((error) {
-          //     // Handle errors
-          //     if (firstName.isNotEmpty &&
-          //         lastName.isNotEmpty &&
-          //         amount.isNotEmpty) {
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //           const SnackBar(content: Text('Entry Added Successfully.')));
-          //       Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => AddEntryScreen(),
-          //           ));
-          //     } else {
-          //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //           content: Text('Please fill in all required fields.')));
-          //     }
-          //   });
-          // } else if (_selectedOption == "Old Entry") {
-          //   // Call the oldEntry function
-          //   oldEntry(
-          //           amount: _amountController.text,
-          //           selectedName: selectedName,
-          //           selectedId: selectedUserId)
-          //       .then((entryResponse) {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ));
-          //     setState(() {
-          //       fetchData(selectedName);
-          //       // Navigator.pop(context);
-          //       if (amount.isNotEmpty &&
-          //           selectedName.isNotEmpty &&
-          //           amount.isNotEmpty) {
-          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //             content: Text('Entry Added Successfully.')));
-          //       } else {
-          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //             content: Text('Please fill in all required fields.')));
-          //       }
-          //     });
-          //   }).catchError((error) {
-          //     // Handle errors
-          //     if (amount.isNotEmpty &&
-          //         selectedName.isNotEmpty &&
-          //         amount.isNotEmpty) {
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //           const SnackBar(content: Text('Entry Added Successfully.')));
-          //     } else {
-          //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //           content: Text('Please fill in all required fields.')));
-          //     }
-          //   });
-          // } else {
-          //   // Handle other cases or show an error message
-          // }
-          // clearText();
-          // if (firstName.isNotEmpty &&
-          //     lastName.isNotEmpty &&
-          //     amount.isNotEmpty) {
-          //   // Check if the user already exists
-          //   if (_selectedOption == "New Entry" &&
-          //       _checkUserExists(firstName, lastName)) {
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       const SnackBar(
-          //           content:
-          //               Text('User already exists. Please create a new one.')),
-          //     );
-          //   } else {
-          //     // Call the createEntry function to post the data
-          //     createEntry(firstName, lastName, amount).then((entryResponse) {
-          //       // Handle the response as needed
-          //       // Navigate to AddEntryScreen
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ),
-          //       );
-          //     }).catchError((error) {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ),
-          //       );
-          //       // Handle errors
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //         const SnackBar(content: Text('Entry added succesfully')),
-          //       );
-          //     });
-          //   }
-          // } else if (_selectedOption == "Old Entry") {
-          //   oldEntry(
-          //           amount: _amountController.text,
-          //           selectedName: selectedName,
-          //           selectedId: selectedUserId)
-          //       .then((entryResponse) {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AddEntryScreen(),
-          //         ));
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //         const SnackBar(content: Text('Entry Added Successfully.')));
-          //   });
-          // } else {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //       const SnackBar(content: Text('Add all required fields.')));
-          // }
-
-          // clearText();
           if (_selectedOption == "New Entry" &&
               firstName.isNotEmpty &&
               lastName.isNotEmpty &&

@@ -55,9 +55,11 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
       Uri.parse('https://appapi.techgigs.in/api/transaction/getbyuser'),
       body: {
         'userId': userId,
+        "page": "1",
+        "limit": "500",
       },
     );
-
+    print("api response:$response");
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       setState(() {
@@ -299,7 +301,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                   child: TextWidget(
                                       text: '${date}',
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 11,
+                                      textsize: 10,
                                       textweight: FontWeight.w700),
                                 ),
                               ),
@@ -317,7 +319,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                   child: TextWidget(
                                       text: selectedName,
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -332,9 +334,10 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                   width:
                                       MediaQuery.sizeOf(context).width * 0.25,
                                   child: TextWidget(
-                                      text: remark,
+                                      text:
+                                          "$remark-(${transactionItem.identity})",
                                       textcolor: MyAppColor.textClor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -353,7 +356,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.greenColor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               ),
@@ -372,7 +375,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                           ? amount
                                           : '',
                                       textcolor: MyAppColor.redColor,
-                                      textsize: 13,
+                                      textsize: 12,
                                       textweight: FontWeight.w600),
                                 ),
                               )
