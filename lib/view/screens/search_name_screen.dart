@@ -135,7 +135,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
         ),
         backgroundColor: Colors.white,
         body: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(10.0),
           child: Stack(
             children: [
               Column(
