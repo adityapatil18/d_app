@@ -138,7 +138,7 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(8.0),
         child: Stack(
           children: [
             Column(
