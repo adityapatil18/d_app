@@ -25,15 +25,30 @@ class _SignupScreenState extends State<SignupScreen> {
     checkAndNavigate();
   }
 
+  // Future<void> checkAndNavigate() async {
+  //   String? userId = await SharedPreferencesHelper.getUserId();
+  //   if (userId != null && userId.isNotEmpty) {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => HomeScreen(),
+  //       ),
+  //     );
+  //   }
+  // }
+
   Future<void> checkAndNavigate() async {
-    String? userId = await SharedPreferencesHelper.getUserId();
-    if (userId != null && userId.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
+    bool isLoggedIn = await SharedPreferencesHelper.getLoginState();
+    if (isLoggedIn) {
+      String? userId = await SharedPreferencesHelper.getUserId();
+      if (userId != null && userId.isNotEmpty) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      }
     }
   }
 
@@ -55,16 +70,16 @@ class _SignupScreenState extends State<SignupScreen> {
         // Save the user ID in SharedPreferences when login is successful
         await SharedPreferencesHelper.saveUserId(userId);
         await SharedPreferencesHelper.saveLoginState(true);
-        await checkAndNavigate();
+        // await checkAndNavigate();
 
         print('User ID: $userId');
         print('Login successfully');
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => HomeScreen(),
-        //   ),
-        // );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

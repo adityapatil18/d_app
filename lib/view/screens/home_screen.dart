@@ -1,10 +1,13 @@
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:d_app/view/custom_widgets/custom_container.dart';
+import 'package:d_app/view/screens/login_screen.dart';
 import 'package:d_app/view/screens/search_date_screen.dart';
 import 'package:d_app/view/screens/search_name_screen.dart';
 import 'package:d_app/view/screens/add_entry.dart';
 import 'package:flutter/material.dart';
+
+import '../../utils/shared_functions.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -51,18 +54,43 @@ class HomeScreen extends StatelessWidget {
           SizedBox(
             height: 40,
           ),
-          CustomContainer(
-              borderRadius: BorderRadius.circular(15),
-              imagePath: 'images/search_date.png',
-              text: 'Search by Date',
-              border: Border.all(color: Colors.red),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchDateScreen(),
-                    ));
-              }),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomContainer(
+                  borderRadius: BorderRadius.circular(15),
+                  imagePath: 'images/search_date.png',
+                  text: 'Search by Date',
+                  border: Border.all(color: Colors.red),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchDateScreen(),
+                        ));
+                  }),
+              SizedBox(
+                width: 40,
+              ),
+              CustomContainer(
+                  borderRadius: BorderRadius.circular(15),
+                  imagePath: 'images/logout.png',
+                  text: 'Logout',
+                  border: Border.all(color: Colors.red),
+                  onTap: () async {
+                    await SharedPreferencesHelper.clearUserId();
+                    await SharedPreferencesHelper.saveLoginState(false);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SignupScreen(), // Replace with your login screen
+                      ),
+                    );
+                  }),
+            ],
+          ),
           SizedBox(
             height: 100,
           ),

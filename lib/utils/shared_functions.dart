@@ -5,6 +5,11 @@ class SharedPreferencesHelper {
 
   static const String isLoggedInKey = 'isLoggedIn';
 
+  static Future<void> clearUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyUserId);
+  }
+
   static Future<void> saveLoginState(bool isLoggedIn) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(isLoggedInKey, isLoggedIn);

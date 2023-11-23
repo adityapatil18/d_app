@@ -10,15 +10,13 @@ SharedPreferences? _sharedPreferences;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  String? userId = await SharedPreferencesHelper.getUserId();
 
-  runApp(DAPP(isLoggedIn: userId != null && userId.isNotEmpty));
+  runApp(DAPP());
 }
 
 class DAPP extends StatelessWidget {
-  final bool isLoggedIn;
 
-  const DAPP({super.key, required this.isLoggedIn});
+  const DAPP({super.key, });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,7 @@ class DAPP extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: AppBarTheme(elevation: 0, color: Colors.white),
           textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
-      home: isLoggedIn ? SignupScreen() : HomeScreen(),
+      home: SignupScreen(),
     );
   }
 }
