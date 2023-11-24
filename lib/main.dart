@@ -1,10 +1,8 @@
-import 'package:d_app/view/screens/home_screen.dart';
 import 'package:d_app/view/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'utils/shared_functions.dart';
 
 SharedPreferences? _sharedPreferences;
 
