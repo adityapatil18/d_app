@@ -302,7 +302,7 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                                       text: '${date}',
                                       textcolor: MyAppColor.textClor,
                                       textsize: 10,
-                                      textweight: FontWeight.w700),
+                                      textweight: FontWeight.w600),
                                 ),
                               ),
                               const VerticalDivider(

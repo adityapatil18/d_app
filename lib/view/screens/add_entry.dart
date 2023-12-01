@@ -135,7 +135,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   SizedBox(

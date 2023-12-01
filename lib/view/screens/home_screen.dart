@@ -1,6 +1,7 @@
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:d_app/view/custom_widgets/custom_container.dart';
+import 'package:d_app/view/screens/add_old_entry_screen.dart';
 import 'package:d_app/view/screens/login_screen.dart';
 import 'package:d_app/view/screens/search_date_screen.dart';
 import 'package:d_app/view/screens/search_name_screen.dart';
@@ -39,14 +40,14 @@ class HomeScreen extends StatelessWidget {
               ),
               CustomContainer(
                   borderRadius: BorderRadius.circular(15),
-                  imagePath: 'images/search.png',
-                  text: 'Search by Name',
+                  imagePath: 'images/old.png',
+                  text: 'Add Old Entry',
                   border: Border.all(color: Colors.red),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SearchNameScreen(),
+                          builder: (context) => AddOldEntryScreen(),
                         ));
                   })
             ],
@@ -75,24 +76,35 @@ class HomeScreen extends StatelessWidget {
               ),
               CustomContainer(
                   borderRadius: BorderRadius.circular(15),
-                  imagePath: 'images/logout.png',
-                  text: 'Logout',
+                  imagePath: 'images/search.png',
+                  text: 'Search by Name',
                   border: Border.all(color: Colors.red),
-                  onTap: () async {
-                    await SharedPreferencesHelper.clearUserId();
-                    await SharedPreferencesHelper.saveLoginState(false);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            SignupScreen(), // Replace with your login screen
-                      ),
-                    );
-                  }),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchNameScreen(),
+                        ));
+                  })
             ],
           ),
           SizedBox(
-            height: 100,
+            height: 40,
+          ),
+          CustomContainer(
+              borderRadius: BorderRadius.circular(15),
+              imagePath: 'images/logout.png',
+              text: 'Logout',
+              border: Border.all(color: Colors.red),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchNameScreen(),
+                    ));
+              }),
+          SizedBox(
+            height: 60,
           ),
           GestureDetector(
             child: Image.asset(

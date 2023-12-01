@@ -285,7 +285,7 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                                             .format(transactionItem.createdAt),
                                         textcolor: MyAppColor.textClor,
                                         textsize: 10,
-                                        textweight: FontWeight.w700,
+                                        textweight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
