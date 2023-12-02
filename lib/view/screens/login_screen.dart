@@ -25,18 +25,6 @@ class _SignupScreenState extends State<SignupScreen> {
     checkAndNavigate();
   }
 
-  // Future<void> checkAndNavigate() async {
-  //   String? userId = await SharedPreferencesHelper.getUserId();
-  //   if (userId != null && userId.isNotEmpty) {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => HomeScreen(),
-  //       ),
-  //     );
-  //   }
-  // }
-
   Future<void> checkAndNavigate() async {
     bool isLoggedIn = await SharedPreferencesHelper.getLoginState();
     if (isLoggedIn) {

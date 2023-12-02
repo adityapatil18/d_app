@@ -1,15 +1,19 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
+import 'package:d_app/view/screens/given2_entry_screen.dart';
+import 'package:d_app/view/screens/recived2_entry2_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 
+import '../../model/date_model.dart';
 import '../../utils/constant.dart';
 import '../custom_widgets/custom_gradientButton.dart';
 import '../custom_widgets/dateSelection_container.dart';
 import '../custom_widgets/text_widget.dart';
-import 'given_entry_screen.dart';
 import 'home_screen.dart';
-import 'recieved_entry_screen.dart';
 
 class AddOldEntryScreen extends StatefulWidget {
   const AddOldEntryScreen({Key? key}) : super(key: key);
@@ -19,7 +23,41 @@ class AddOldEntryScreen extends StatefulWidget {
 }
 
 class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
-  late DateTime selectedDate = DateTime.now();
+  List<Datum> allData = []; // Create a list to store transaction data
+
+  DateTime? selectedDate;
+  Date? date1;
+  @override
+  void initState() {
+    super.initState();
+    // fetchDatafordate(DateTime
+    //     .now()); // Fetch opening and closing balances for the current date
+  }
+
+  Future<void> fetchDatafordate(DateTime selectedDate) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://appapi.techgigs.in/api/transaction/getall?date=$selectedDate'),
+      );
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        // Assuming the API response structure has opening and closing balance data
+
+        // Update the UI with both balances and transaction data
+        setState(() {
+          date1 = dateFromJson(jsonEncode(jsonData));
+        });
+      } else {
+        // Handle the error when the API request fails
+        print('Failed to fetch data.');
+      }
+    } catch (error) {
+      // Handle any exceptions that occur during the API request
+      print('Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,19 +94,23 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
           onPressed: () async {
             final DateTime? pickedDate = await showDatePicker(
               context: context,
-              initialDate: selectedDate,
+              initialDate: selectedDate ?? DateTime.now(),
               firstDate: DateTime(2000),
               lastDate: DateTime(2101),
             );
 
-            if (pickedDate != null && pickedDate != selectedDate) {
+            if (pickedDate != null) {
               setState(() {
                 selectedDate = pickedDate;
               });
+              fetchDatafordate(selectedDate!);
             }
           },
           child: Text(
-            ' ${DateFormat('yyyy-MM-dd').format(selectedDate)}', // Format the date
+            selectedDate == null
+                ? 'Choose Date'
+                : ' ${DateFormat('yyyy-MM-dd').format(selectedDate!)}',
+            // If selectedDate is null, show 'Choose Date', otherwise show the formatted date
           ),
         ),
       ),
@@ -114,10 +156,6 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
                           textweight: FontWeight.w600),
                     ),
                   ),
-                  // VerticalDivider(
-                  //   thickness: 1,
-                  //   color: Colors.white,
-                  // ),
                   Expanded(
                     // flex: 1,
                     child: Container(
@@ -169,6 +207,112 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
                 ],
               ),
             ),
+            Expanded(
+              child: ListView.builder(
+                // shrinkWrap: true,
+                itemCount: date1?.data.length ?? 0,
+                itemBuilder: (context, index) {
+                  final transactionItem = date1!.data[index];
+                  final transactionType = transactionItem.trnxType;
+                  final transactionDate = transactionItem.trnxDate;
+                  final amount = transactionItem.amount;
+                  final remark = transactionItem.remark;
+
+                  final name = transactionItem.userDetail[0].firstName +
+                      " " +
+                      transactionItem.userDetail[0].lastName;
+
+                  return Container(
+                    height: 50,
+                    width: MediaQuery.sizeOf(context).width,
+                    color: index.isEven ? MyAppColor.grey2Color : Colors.white,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: TextWidget(
+                                text:
+                                    transactionDate.toString().substring(0, 10),
+                                textcolor: MyAppColor.textClor,
+                                textsize: 10,
+                                textweight: FontWeight.w700),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.black,
+                          thickness: 1,
+                          // width: 10,
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: TextWidget(
+                                text: name,
+                                textcolor: MyAppColor.textClor,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.black,
+                          thickness: 1,
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: TextWidget(
+                                text:
+                                    "$remark-(${transactionItem.adminDetail[0].identity})",
+                                textcolor: MyAppColor.textClor,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.black,
+                          thickness: 1,
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: TextWidget(
+                                text: transactionType == "credit" ? amount : '',
+                                textcolor: MyAppColor.greenColor,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.black,
+                          thickness: 1,
+                        ),
+                        Expanded(
+                          // flex: 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.sizeOf(context).width * 0.25,
+                            child: TextWidget(
+                                text: transactionType == 'debit' ? amount : '',
+                                textcolor: MyAppColor.redColor,
+                                textsize: 12,
+                                textweight: FontWeight.w600),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -184,7 +328,7 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => RecivedEntryScreen()));
+                        builder: (context) => Recived2Entry2Screen2()));
               },
               buttonText: 'Received',
               containerColor: Color(0xFFF0D963),
@@ -195,7 +339,7 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => GivenEntryScreen()));
+                        builder: (context) => Given2Entry2Screen()));
               },
               buttonText: 'Given',
               containerColor: Color(0xFFF0D963),

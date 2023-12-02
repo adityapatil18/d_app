@@ -101,378 +101,382 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Image.asset(
-                'images/back_arrow.png',
-              )),
-          leadingWidth: 50,
-          centerTitle: true,
-          title: InkWell(
-            onTap: () {
-              showUninstallConfirmationDialog(context);
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
             },
-            child: Image.asset(
-              'images/power.png',
-              width: 40,
-              height: 40,
+            icon: Image.asset(
+              'images/back_arrow.png',
+            )),
+        leadingWidth: 50,
+        centerTitle: true,
+        title: InkWell(
+          onTap: () {
+            showUninstallConfirmationDialog(context);
+          },
+          child: Image.asset(
+            'images/power.png',
+            width: 40,
+            height: 40,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: IconButton(
+              onPressed: () {},
+              icon: Image.asset('images/forward_arrow.png', width: 40),
             ),
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: IconButton(
-                onPressed: () {},
-                icon: Image.asset('images/forward_arrow.png', width: 40),
-              ),
-            ),
-          ],
-          backgroundColor: Colors.white,
-        ),
+        ],
         backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  TextField(
-                    decoration: InputDecoration(
-                        hintText: 'Search by name',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    controller: _searchNameController,
-                    keyboardType: TextInputType.text,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.singleLineFormatter
-                    ],
-                    onChanged: (query) {
-                      setState(() {
-                        searchResults = searchNames(query);
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    height: 50,
-                    width: MediaQuery.sizeOf(context).width,
-                    color: Colors.black,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          // flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            child: const TextWidget(
-                                text: 'Date',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w600),
-                          ),
+      ),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: 'Search by name',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  controller: _searchNameController,
+                  keyboardType: TextInputType.text,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.singleLineFormatter
+                  ],
+                  onChanged: (query) {
+                    setState(() {
+                      searchResults = searchNames(query);
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  height: 50,
+                  width: MediaQuery.sizeOf(context).width,
+                  color: Colors.black,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        // flex: 1,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.sizeOf(context).width * 0.25,
+                          child: const TextWidget(
+                              text: 'Date',
+                              textcolor: Colors.white,
+                              textsize: 12,
+                              textweight: FontWeight.w600),
                         ),
-                        // VerticalDivider(
-                        //   thickness: 1,
-                        //   color: Colors.white,
-                        // ),
-                        Expanded(
-                          // flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            child: const TextWidget(
-                                text: 'Name',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w600),
-                          ),
-                        ),
-                        Expanded(
-                          // flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            child: const TextWidget(
-                                text: 'Remark',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w600),
-                          ),
-                        ),
-                        Expanded(
-                          // flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            child: const TextWidget(
-                                text: 'Received',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w600),
-                          ),
-                        ),
-                        Expanded(
-                          // flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            child: const TextWidget(
-                                text: 'Given',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w600),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  if (searchResults.isNotEmpty)
-                    Container(
-                      height: MediaQuery.sizeOf(context).height * 0.25,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: searchResults.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            textColor: Colors.black,
-                            tileColor: index.isEven
-                                ? MyAppColor.grey2Color
-                                : Colors.white,
-                            title: Text(searchResults[index].firstName +
-                                " " +
-                                searchResults[index].lastName),
-                            onTap: () {
-                              // Handle the selection of the name here
-
-                              // Clear the search results and hide the ListView
-                              setState(() {
-                                _searchNameController.text =
-                                    searchResults[index].firstName +
-                                        " " +
-                                        searchResults[index].lastName;
-                                selectedName = searchResults[index].firstName +
-                                    " " +
-                                    searchResults[index].lastName;
-                                selectedUserId = searchResults[index].id;
-                                fetchTransactionsForUser(selectedUserId);
-                                searchResults.clear();
-                              });
-                            },
-                          );
-                        },
                       ),
-                    ),
-                  Expanded(
+                      // VerticalDivider(
+                      //   thickness: 1,
+                      //   color: Colors.white,
+                      // ),
+                      Expanded(
+                        // flex: 1,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.sizeOf(context).width * 0.25,
+                          child: const TextWidget(
+                              text: 'Name',
+                              textcolor: Colors.white,
+                              textsize: 12,
+                              textweight: FontWeight.w600),
+                        ),
+                      ),
+                      Expanded(
+                        // flex: 1,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.sizeOf(context).width * 0.25,
+                          child: const TextWidget(
+                              text: 'Remark',
+                              textcolor: Colors.white,
+                              textsize: 12,
+                              textweight: FontWeight.w600),
+                        ),
+                      ),
+                      Expanded(
+                        // flex: 1,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.sizeOf(context).width * 0.25,
+                          child: const TextWidget(
+                              text: 'Received',
+                              textcolor: Colors.white,
+                              textsize: 12,
+                              textweight: FontWeight.w600),
+                        ),
+                      ),
+                      Expanded(
+                        // flex: 1,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.sizeOf(context).width * 0.25,
+                          child: const TextWidget(
+                              text: 'Given',
+                              textcolor: Colors.white,
+                              textsize: 12,
+                              textweight: FontWeight.w600),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                if (searchResults.isNotEmpty)
+                  Container(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
                     child: ListView.builder(
-                      // shrinkWrap: true,
-
-                      itemCount: transaction?.data.length ?? 0,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: searchResults.length,
                       itemBuilder: (context, index) {
-                        final transactionItem = transaction!.data[index];
-                        final date = transactionItem.createdAt
-                            .toString()
-                            .substring(0, 10);
-                        final transactionType = transactionItem.trnxType;
-                        final remark = transactionItem.remark;
-                        final amount = transactionItem.amount;
-
-                        return Container(
-                          height: 50,
-                          width: MediaQuery.sizeOf(context).width,
-                          color: index.isEven
+                        return ListTile(
+                          textColor: Colors.black,
+                          tileColor: index.isEven
                               ? MyAppColor.grey2Color
                               : Colors.white,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                // flex: 1,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.25,
-                                  child: TextWidget(
-                                      text: '${date}',
-                                      textcolor: MyAppColor.textClor,
-                                      textsize: 10,
-                                      textweight: FontWeight.w600),
-                                ),
-                              ),
-                              const VerticalDivider(
-                                color: Colors.black,
-                                thickness: 1,
-                                // width: 10,
-                              ),
-                              Expanded(
-                                // flex: 1,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.25,
-                                  child: TextWidget(
-                                      text: selectedName,
-                                      textcolor: MyAppColor.textClor,
-                                      textsize: 12,
-                                      textweight: FontWeight.w600),
-                                ),
-                              ),
-                              const VerticalDivider(
-                                color: Colors.black,
-                                thickness: 1,
-                              ),
-                              Expanded(
-                                // flex: 1,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.25,
-                                  child: TextWidget(
-                                      text:
-                                          "$remark-(${transactionItem.identity})",
-                                      textcolor: MyAppColor.textClor,
-                                      textsize: 12,
-                                      textweight: FontWeight.w600),
-                                ),
-                              ),
-                              const VerticalDivider(
-                                color: Colors.black,
-                                thickness: 1,
-                              ),
-                              Expanded(
-                                // flex: 1,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.25,
-                                  child: TextWidget(
-                                      text: transactionType == "credit"
-                                          ? amount
-                                          : '',
-                                      textcolor: MyAppColor.greenColor,
-                                      textsize: 12,
-                                      textweight: FontWeight.w600),
-                                ),
-                              ),
-                              const VerticalDivider(
-                                color: Colors.black,
-                                thickness: 1,
-                              ),
-                              Expanded(
-                                // flex: 1,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.25,
-                                  child: TextWidget(
-                                      text: transactionType == 'debit'
-                                          ? amount
-                                          : '',
-                                      textcolor: MyAppColor.redColor,
-                                      textsize: 12,
-                                      textweight: FontWeight.w600),
-                                ),
-                              )
-                            ],
-                          ),
+                          title: Text(searchResults[index].firstName +
+                              " " +
+                              searchResults[index].lastName),
+                          onTap: () {
+                            // Handle the selection of the name here
+
+                            // Clear the search results and hide the ListView
+                            setState(() {
+                              _searchNameController.text =
+                                  searchResults[index].firstName +
+                                      " " +
+                                      searchResults[index].lastName;
+                              selectedName = searchResults[index].firstName +
+                                  " " +
+                                  searchResults[index].lastName;
+                              selectedUserId = searchResults[index].id;
+                              fetchTransactionsForUser(selectedUserId);
+                              searchResults.clear();
+                            });
+                          },
                         );
                       },
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Row(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              color: MyAppColor.yellowColor,
-              width: MediaQuery.sizeOf(context).width / 2.01,
-              height: 60,
-              child: TextWidget(
-                  text:
-                      "Total Received: ${transaction?.total.totalReceived ?? 0}",
-                  textcolor: MyAppColor.textClor,
-                  textsize: 13,
-                  textweight: FontWeight.w600),
-            ),
-            Container(
-              width: 1,
-              height: 60,
-              color: Colors.black,
-            ),
-            Container(
-              alignment: Alignment.center,
-              color: MyAppColor.yellowColor,
-              width: MediaQuery.sizeOf(context).width / 2.01,
-              height: 60,
-              child: TextWidget(
-                  text: "Total Given: ${transaction?.total.totalGiven ?? 0}",
-                  textcolor: MyAppColor.textClor,
-                  textsize: 13,
-                  textweight: FontWeight.w600),
+                Expanded(
+                  child: ListView.builder(
+                    // shrinkWrap: true,
+
+                    itemCount: transaction?.data.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final transactionItem = transaction!.data[index];
+                      final date =
+                          transactionItem.createdAt.toString().substring(0, 10);
+                      final transactionType = transactionItem.trnxType;
+                      final remark = transactionItem.remark;
+                      final amount = transactionItem.amount;
+
+                      return Container(
+                        height: 50,
+                        width: MediaQuery.sizeOf(context).width,
+                        color:
+                            index.isEven ? MyAppColor.grey2Color : Colors.white,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              // flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                child: TextWidget(
+                                    text: '${date}',
+                                    textcolor: MyAppColor.textClor,
+                                    textsize: 10,
+                                    textweight: FontWeight.w600),
+                              ),
+                            ),
+                            const VerticalDivider(
+                              color: Colors.black,
+                              thickness: 1,
+                              // width: 10,
+                            ),
+                            Expanded(
+                              // flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                child: TextWidget(
+                                    text: selectedName,
+                                    textcolor: MyAppColor.textClor,
+                                    textsize: 12,
+                                    textweight: FontWeight.w600),
+                              ),
+                            ),
+                            const VerticalDivider(
+                              color: Colors.black,
+                              thickness: 1,
+                            ),
+                            Expanded(
+                              // flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                child: TextWidget(
+                                    text:
+                                        "$remark-(${transactionItem.identity})",
+                                    textcolor: MyAppColor.textClor,
+                                    textsize: 12,
+                                    textweight: FontWeight.w600),
+                              ),
+                            ),
+                            const VerticalDivider(
+                              color: Colors.black,
+                              thickness: 1,
+                            ),
+                            Expanded(
+                              // flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                child: TextWidget(
+                                    text: transactionType == "credit"
+                                        ? amount
+                                        : '',
+                                    textcolor: MyAppColor.greenColor,
+                                    textsize: 12,
+                                    textweight: FontWeight.w600),
+                              ),
+                            ),
+                            const VerticalDivider(
+                              color: Colors.black,
+                              thickness: 1,
+                            ),
+                            Expanded(
+                              // flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                child: TextWidget(
+                                    text: transactionType == 'debit'
+                                        ? amount
+                                        : '',
+                                    textcolor: MyAppColor.redColor,
+                                    textsize: 12,
+                                    textweight: FontWeight.w600),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
-        )
-        // Container(
-        //   height: 60,
-        //   color: MyAppColor.yellowColor,
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //     children: [
-        //       Container(
-        //         width: MediaQuery.sizeOf(context).width / 2,
-        //         child: Row(
-        //           children: [
-        //             const TextWidget(
-        //                 text: 'Total \nReceived',
-        //                 textcolor: MyAppColor.textClor,
-        //                 textsize: 13,
-        //                 textweight: FontWeight.w600),
-        //             SizedBox(
-        //               width: 20,
-        //             ),
-        //             TextWidget(
-        //                 text: ' ${transaction?.total.totalReceived ?? 0}',
-        //                 textcolor: MyAppColor.textClor,
-        //                 textsize: 14,
-        //                 textweight: FontWeight.w800)
-        //           ],
-        //         ),
-        //       ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: 150,
+        color: Colors.black,
+        width: MediaQuery.sizeOf(context).width,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  color: MyAppColor.yellowColor,
+                  width: MediaQuery.sizeOf(context).width / 2.01,
+                  height: 60,
+                  child: TextWidget(
+                      text:
+                          "Total Received: ${transaction?.total.totalReceived ?? 0}",
+                      textcolor: MyAppColor.textClor,
+                      textsize: 13,
+                      textweight: FontWeight.w600),
+                ),
+                Container(
+                  width: 1,
+                  height: 60,
+                  color: Colors.black,
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  color: MyAppColor.yellowColor,
+                  width: MediaQuery.sizeOf(context).width / 2.01,
+                  height: 60,
+                  child: TextWidget(
+                      text:
+                          "Total Given: ${transaction?.total.totalGiven ?? 0}",
+                      textcolor: MyAppColor.textClor,
+                      textsize: 13,
+                      textweight: FontWeight.w600),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              color: Colors.yellow,
+              height: 60,
+              width: MediaQuery.sizeOf(context).width,
+              alignment: Alignment.center,
+              child: TextWidget(
+                  text: 'Final:${transaction?.total.totalFinal ?? "0"}',
+                  textcolor: () {
+                    String totalFinalString =
+                        transaction?.total.totalFinal ?? "0";
+                    print(
+                        "Attempting to parse totalFinal: $totalFinalString"); // Print the value
 
-        //       Container(
-        //         width: MediaQuery.sizeOf(context).width / 2,
-        //         child: Row(
-        //           children: [
-        //             const TextWidget(
-        //                 text: 'Total \nGiven',
-        //                 textcolor: MyAppColor.textClor,
-        //                 textsize: 13,
-        //                 textweight: FontWeight.w600),
-        //             SizedBox(
-        //               width: 20,
-        //             ),
-        //             TextWidget(
-        //                 text: '${transaction?.total.totalGiven ?? 0}',
-        //                 textcolor: MyAppColor.textClor,
-        //                 textsize: 14,
-        //                 textweight: FontWeight.w800)
-        //           ],
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        );
+                    try {
+                      // Remove non-numeric characters and attempt to parse
+                      double? finalValue = double.tryParse(
+                        totalFinalString
+                            .replaceAll('₹', '') // Remove currency symbol
+                            .replaceAll(',', '') // Remove commas
+                            .replaceAll('L', '') // Remove 'L' for lakhs
+                            .replaceAll('Cr', '') // Remove 'Cr' for crores
+                            .trim(), // Trim any remaining whitespace
+                      );
+
+                      if (finalValue != null) {
+                        print(
+                            "Parsed totalFinal: $finalValue"); // Print the parsed value
+                        if (finalValue < 0) {
+                          return Colors.red;
+                        } else if (finalValue > 0) {
+                          return Colors.green;
+                        } else {
+                          return Colors.blue;
+                        }
+                      } else {
+                        print("Unable to parse totalFinal as double");
+                        return Colors
+                            .black; // Return a default color if parsing fails
+                      }
+                    } catch (e) {
+                      print("Error parsing totalFinal: $e");
+                      return Colors
+                          .black; // Return a default color in case of an error
+                    }
+                  }(),
+                  textsize: 15,
+                  textweight: FontWeight.w600),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> showUninstallConfirmationDialog(BuildContext context) async {

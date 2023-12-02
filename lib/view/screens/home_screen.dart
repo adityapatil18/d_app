@@ -39,17 +39,17 @@ class HomeScreen extends StatelessWidget {
                 width: 40,
               ),
               CustomContainer(
+                  imagePath: 'images/old.png',
+                  text: 'Add Old Entry',
                   borderRadius: BorderRadius.circular(15),
-                  imagePath: 'images/search.png',
-                  text: 'Search by Name',
                   border: Border.all(color: Colors.red),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SearchNameScreen(),
+                          builder: (context) => AddOldEntryScreen(),
                         ));
-                  })
+                  }),
             ],
           ),
           SizedBox(
@@ -76,20 +76,35 @@ class HomeScreen extends StatelessWidget {
               ),
               CustomContainer(
                   borderRadius: BorderRadius.circular(15),
-                  imagePath: 'images/logout.png',
-                  text: 'Logout',
+                  imagePath: 'images/search.png',
+                  text: 'Search by Name',
                   border: Border.all(color: Colors.red),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SignupScreen(),
+                          builder: (context) => SearchNameScreen(),
                         ));
-                  }),
+                  })
             ],
           ),
           SizedBox(
-            height: 100,
+            height: 40,
+          ),
+          CustomContainer(
+              borderRadius: BorderRadius.circular(15),
+              imagePath: 'images/logout.png',
+              text: 'Logout',
+              border: Border.all(color: Colors.red),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignupScreen(),
+                    ));
+              }),
+          SizedBox(
+            height: 60,
           ),
           GestureDetector(
             child: Image.asset(

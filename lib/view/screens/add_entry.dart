@@ -70,35 +70,6 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
     }
   }
 
-  // void _recivedPopUp() {
-  //   showModalBottomSheet<void>(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     builder: (context) {
-  //       return Container(
-  //           height: MediaQuery.sizeOf(context).height / 1.5,
-  //           width: MediaQuery.sizeOf(context).width,
-  //           child: RecivedEntryScreen());
-  //     },
-  //   );
-  //   setState(() {
-  //     fetchDatafordate(DateTime.now());
-  //   });
-  // }
-
-  // void _givenPopUp() {
-  //   showModalBottomSheet<void>(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     builder: (context) {
-  //       return Container(
-  //           width: MediaQuery.sizeOf(context).width,
-  //           height: MediaQuery.sizeOf(context).height / 1.5,
-  //           child: GivenEntryScreen());
-  //     },
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
