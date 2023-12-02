@@ -40,14 +40,14 @@ class HomeScreen extends StatelessWidget {
               ),
               CustomContainer(
                   borderRadius: BorderRadius.circular(15),
-                  imagePath: 'images/old.png',
-                  text: 'Add Old Entry',
+                  imagePath: 'images/search.png',
+                  text: 'Search by Name',
                   border: Border.all(color: Colors.red),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddOldEntryScreen(),
+                          builder: (context) => SearchNameScreen(),
                         ));
                   })
             ],
@@ -76,35 +76,20 @@ class HomeScreen extends StatelessWidget {
               ),
               CustomContainer(
                   borderRadius: BorderRadius.circular(15),
-                  imagePath: 'images/search.png',
-                  text: 'Search by Name',
+                  imagePath: 'images/logout.png',
+                  text: 'Logout',
                   border: Border.all(color: Colors.red),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SearchNameScreen(),
+                          builder: (context) => SignupScreen(),
                         ));
-                  })
+                  }),
             ],
           ),
           SizedBox(
-            height: 40,
-          ),
-          CustomContainer(
-              borderRadius: BorderRadius.circular(15),
-              imagePath: 'images/logout.png',
-              text: 'Logout',
-              border: Border.all(color: Colors.red),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchNameScreen(),
-                    ));
-              }),
-          SizedBox(
-            height: 60,
+            height: 100,
           ),
           GestureDetector(
             child: Image.asset(

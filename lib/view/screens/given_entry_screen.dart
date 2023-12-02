@@ -5,6 +5,7 @@ import 'package:android_intent_plus/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/all_data.dart';
@@ -34,6 +35,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
   List<Datum> searchResults = [];
   String selectedUserId = ''; // Variable to hold the selected user's ID
   String selectedName = ""; // Store the selected name
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     String lastName,
     String amount,
     String remark,
+    DateTime? dateTime,
   ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final storedUserId = prefs.getString("userId");
@@ -75,7 +78,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           "type": "debit",
           "status": "1",
           "remark": remark,
-          "date": "",
+          "date": selectedDate.toLocal().toString(),
           "id": selectedUserId,
           "createdId": storedUserId,
         }));
@@ -95,12 +98,12 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
     }
   }
 
-  Future<GEntry> oldEntry({
-    String selectedName = "",
-    String amount = "",
-    String selectedId = "",
-    String remark = "",
-  }) async {
+  Future<GEntry> oldEntry(
+      {String selectedName = "",
+      String amount = "",
+      String selectedId = "",
+      String remark = "",
+      DateTime? selectedDate}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final storedUserId = prefs.getString("userId");
     if (storedUserId == null || storedUserId.isEmpty) {
@@ -119,7 +122,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
           "status": "0",
           "Id": selectedId,
           "remark": remark,
-          "date": "",
+          "date": selectedDate!.toLocal().toString(),
           "createdId": storedUserId,
         }));
     print(amount);
@@ -225,9 +228,25 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
             SizedBox(
               height: 20,
             ),
-            CustomDateSelectionContainer(
-                textColor: MyAppColor.mainBlueColor,
-                iconColor: MyAppColor.mainBlueColor),
+            ElevatedButton(
+              onPressed: () async {
+                final DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                );
+
+                if (pickedDate != null && pickedDate != selectedDate) {
+                  setState(() {
+                    selectedDate = pickedDate;
+                  });
+                }
+              },
+              child: Text(
+                ' ${DateFormat('yyyy-MM-dd').format(selectedDate)}', // Format the date
+              ),
+            ),
             SizedBox(
               height: 20,
             ),
@@ -515,7 +534,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
               );
             } else {
               // Call the createEntry function to post the data
-              createEntry(firstName, lastName, amount, remark)
+              createEntry(firstName, lastName, amount, remark, selectedDate)
                   .then((entryResponse) {
                 // Handle the response as needed
                 // Navigate to AddEntryScreen
@@ -547,6 +566,7 @@ class _GivenEntryScreenState extends State<GivenEntryScreen> {
               remark: _givenRemarkController.text,
               selectedName: selectedName,
               selectedId: selectedUserId,
+              selectedDate: selectedDate,
             ).then((entryResponse) {
               Navigator.push(
                 context,

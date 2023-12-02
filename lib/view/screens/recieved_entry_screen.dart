@@ -5,6 +5,7 @@ import 'package:android_intent_plus/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/all_data.dart';
@@ -34,6 +35,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
   List<Datum> searchResults = [];
   String selectedUserId = ''; // Variable to hold the selected user's ID
   String selectedName = ""; // Store the selected name
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -58,6 +60,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
     String lastName,
     String amount,
     String remark,
+    DateTime? dateTime,
   ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final storedUserId = prefs.getString("userId");
@@ -77,7 +80,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           "status": "1",
           "id": selectedUserId,
           "remark": remark,
-          "date": "",
+          "date": selectedDate.toLocal().toString(),
           "createdId": storedUserId,
         }));
     print(selectedUserId);
@@ -101,7 +104,8 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
       {String selectedName = "",
       String remark = "",
       String amount = "",
-      String selectedId = ""}) async {
+      String selectedId = "",
+      DateTime? selectedDate}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final storedUserId = prefs.getString("userId");
     if (storedUserId == null || storedUserId.isEmpty) {
@@ -120,13 +124,14 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
           "status": "0",
           "Id": selectedId,
           "remark": remark,
-          "date": "",
+          "date": selectedDate!.toLocal().toString(),
           "createdId": storedUserId,
         }));
     print(amount);
     print(selectedId);
     print(selectedName);
     print(remark);
+    print(selectedDate);
     print('api response: ${response.body}');
 
     if (response.statusCode == 200) {
@@ -227,9 +232,25 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
             SizedBox(
               height: 20,
             ),
-            CustomDateSelectionContainer(
-                textColor: MyAppColor.mainBlueColor,
-                iconColor: MyAppColor.mainBlueColor),
+            ElevatedButton(
+              onPressed: () async {
+                final DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                );
+
+                if (pickedDate != null && pickedDate != selectedDate) {
+                  setState(() {
+                    selectedDate = pickedDate;
+                  });
+                }
+              },
+              child: Text(
+                ' ${DateFormat('yyyy-MM-dd').format(selectedDate)}', // Format the date
+              ),
+            ),
             SizedBox(
               height: 20,
             ),
@@ -519,7 +540,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                   );
                 } else {
                   // Call the createEntry function to post the data
-                  createEntry(firstName, lastName, amount, remark)
+                  createEntry(firstName, lastName, amount, remark, selectedDate)
                       .then((entryResponse) {
                     // Handle the response as needed
                     // Navigate to AddEntryScreen
@@ -551,6 +572,7 @@ class _RecivedEntryScreenState extends State<RecivedEntryScreen> {
                   remark: _receivedRemarkController.text,
                   selectedName: selectedName,
                   selectedId: selectedUserId,
+                  selectedDate: selectedDate,
                 ).then((entryResponse) {
                   Navigator.push(
                     context,
