@@ -55,8 +55,10 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
 
         // Update the UI with both balances and transaction data
         setState(() {
-          openingBalance = date.total.openingBalance;
-          closingBalance = date.total.closingBalance;
+          openingBalance =
+              removeCrSuffixAndRupeesSymbol(date.total.openingBalance);
+          closingBalance =
+              removeCrSuffixAndRupeesSymbol(date.total.closingBalance);
 
           date1 = dateFromJson(jsonEncode(jsonData));
         });
@@ -68,6 +70,17 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
       // Handle any exceptions that occur during the API request
       print('Error: $error');
     }
+  }
+
+  // Helper method to remove 'r' suffix and 'Rupees' symbol
+  String removeCrSuffixAndRupeesSymbol(String value) {
+    // Remove 'r' suffix
+    value = value.replaceAll('r', '');
+
+    // Remove 'Rupees' symbol
+    value = value.replaceAll('₹', '');
+
+    return value;
   }
 
   @override
@@ -243,7 +256,8 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                       itemBuilder: (context, index) {
                         final transactionItem = date1!.data[index];
                         final transactionType = transactionItem.trnxType;
-                        final amount = transactionItem.amount;
+                        final amount = removeCrSuffixAndRupeesSymbol(
+                            transactionItem.amount);
                         final remark = transactionItem.remark;
 
                         final name = transactionItem.userDetail[0].firstName +

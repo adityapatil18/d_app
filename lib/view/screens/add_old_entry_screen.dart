@@ -59,6 +59,17 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
     }
   }
 
+// Helper method to remove 'r' suffix and 'Rupees' symbol
+  String removeCrSuffixAndRupeesSymbol(String value) {
+    // Remove 'r' suffix
+    value = value.replaceAll('r', '');
+
+    // Remove 'Rupees' symbol
+    value = value.replaceAll('₹', '');
+
+    return value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,6 +118,7 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
             if (pickedDate != null) {
               setState(() {
                 selectedDate = pickedDate;
+                fetchDatafordate(selectedDate!);
               });
             }
           },
@@ -224,7 +236,8 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
                   final transactionItem = date1!.data[index];
                   final transactionType = transactionItem.trnxType;
                   final transactionDate = transactionItem.trnxDate;
-                  final amount = transactionItem.amount;
+                  final amount =
+                      removeCrSuffixAndRupeesSymbol(transactionItem.amount);
                   final remark = transactionItem.remark;
 
                   final name = transactionItem.userDetail[0].firstName +
@@ -243,8 +256,7 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
                             alignment: Alignment.center,
                             width: MediaQuery.sizeOf(context).width * 0.25,
                             child: TextWidget(
-                                text:
-                                    transactionDate.toString().substring(0, 10),
+                                text: selectedDate.toString().substring(0, 10),
                                 textcolor: MyAppColor.textClor,
                                 textsize: 10,
                                 textweight: FontWeight.w700),

@@ -102,6 +102,17 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
     }
   }
 
+  // Helper method to remove 'r' suffix and 'Rupees' symbol
+  String removeCrSuffixAndRupeesSymbol(String value) {
+    // Remove 'r' suffix
+    value = value.replaceAll('r', '');
+
+    // Remove 'Rupees' symbol
+    value = value.replaceAll('₹', '');
+
+    return value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,247 +148,244 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                ElevatedButton(
-                  style: const ButtonStyle(
-                      backgroundColor:
-                          MaterialStatePropertyAll(MyAppColor.greyColor)),
-                  onPressed: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (pickedDate != null) {
-                      setState(() {
-                        selectedDate = pickedDate;
-                        buttonText =
-                            DateFormat('yyyy-MM-dd').format(selectedDate!);
-                      });
-                      _searchTransactionsByDate();
-                      print("Selected date: $pickedDate");
-                    }
-                  },
-                  child: TextWidget(
-                      text: buttonText,
-                      textcolor: MyAppColor.mainBlueColor,
-                      textsize: 16,
-                      textweight: FontWeight.w700),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              ElevatedButton(
+                style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(MyAppColor.greyColor)),
+                onPressed: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  if (pickedDate != null) {
+                    setState(() {
+                      selectedDate = pickedDate;
+                      buttonText =
+                          DateFormat('yyyy-MM-dd').format(selectedDate!);
+                    });
+                    _searchTransactionsByDate();
+                    print("Selected date: $pickedDate");
+                  }
+                },
+                child: TextWidget(
+                    text: buttonText,
+                    textcolor: MyAppColor.mainBlueColor,
+                    textsize: 16,
+                    textweight: FontWeight.w700),
+              ),
+              SizedBox(height: 30),
+              Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        child: const TextWidget(
+                          text: 'Date',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        child: const TextWidget(
+                          text: 'Name',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        child: const TextWidget(
+                          text: 'Remark',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        child: const TextWidget(
+                          text: 'Received',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        child: const TextWidget(
+                          text: 'Given',
+                          textcolor: Colors.white,
+                          textsize: 12,
+                          textweight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 30),
-                Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.black,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: const TextWidget(
-                            text: 'Date',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: const TextWidget(
-                            text: 'Name',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: const TextWidget(
-                            text: 'Remark',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: const TextWidget(
-                            text: 'Received',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: const TextWidget(
-                            text: 'Given',
-                            textcolor: Colors.white,
-                            textsize: 12,
-                            textweight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: transactions.isEmpty
-                      ? const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextWidget(
-                                text:
-                                    'No data for selected date. Select another date',
-                                textcolor: MyAppColor.textClor,
-                                textsize: 14,
-                                textweight: FontWeight.w600),
-                          ],
-                        )
-                      : ListView.builder(
-                          itemCount: transactions.length,
-                          itemBuilder: (context, index) {
-                            // final transactionItem = transactions[index];
-                            final transactionItem = date1!.data[index];
+              ),
+              Expanded(
+                child: transactions.isEmpty
+                    ? const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextWidget(
+                              text:
+                                  'No data for selected date. Select another date',
+                              textcolor: MyAppColor.textClor,
+                              textsize: 14,
+                              textweight: FontWeight.w600),
+                        ],
+                      )
+                    : ListView.builder(
+                        itemCount: transactions.length,
+                        itemBuilder: (context, index) {
+                          // final transactionItem = transactions[index];
+                          final transactionItem = date1!.data[index];
 
-                            final transactionType = transactionItem.trnxType;
-                            final amount = transactionItem.amount;
-                            final remark = transactionItem.remark;
-                            final name =
-                                transactionItem.userDetail[0].firstName +
-                                    " " +
-                                    transactionItem.userDetail[0].lastName;
-                            return Container(
-                              height: 50,
-                              width: MediaQuery.of(context).size.width,
-                              color: index.isEven
-                                  ? MyAppColor.grey2Color
-                                  : Colors.white,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
-                                      child: TextWidget(
-                                        text: DateFormat('yyyy-MM-dd')
-                                            .format(transactionItem.createdAt),
-                                        textcolor: MyAppColor.textClor,
-                                        textsize: 10,
-                                        textweight: FontWeight.w600,
-                                      ),
+                          final transactionType = transactionItem.trnxType;
+                          final amount = removeCrSuffixAndRupeesSymbol(
+                              transactionItem.amount);
+                          final remark = transactionItem.remark;
+                          final name = transactionItem.userDetail[0].firstName +
+                              " " +
+                              transactionItem.userDetail[0].lastName;
+                          return Container(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            color: index.isEven
+                                ? MyAppColor.grey2Color
+                                : Colors.white,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.30,
+                                    child: TextWidget(
+                                      text: DateFormat('yyyy-MM-dd')
+                                          .format(transactionItem.trnxDate),
+                                      textcolor: MyAppColor.textClor,
+                                      textsize: 10,
+                                      textweight: FontWeight.w600,
                                     ),
                                   ),
-                                  const VerticalDivider(
-                                    color: Colors.black,
-                                    thickness: 1,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
-                                      child: TextWidget(
-                                        // Replace 'Name' with the actual property you want to display
-                                        // text: transactionItem.userDetail[0].firstName,
-                                        text: name,
-                                        textcolor: MyAppColor.textClor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600,
-                                      ),
+                                ),
+                                const VerticalDivider(
+                                  color: Colors.black,
+                                  thickness: 1,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.25,
+                                    child: TextWidget(
+                                      // Replace 'Name' with the actual property you want to display
+                                      // text: transactionItem.userDetail[0].firstName,
+                                      text: name,
+                                      textcolor: MyAppColor.textClor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600,
                                     ),
                                   ),
-                                  const VerticalDivider(
-                                    color: Colors.black,
-                                    thickness: 1,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
-                                      child: TextWidget(
-                                        // Replace 'Name' with the actual property you want to display
-                                        // text: transactionItem.userDetail[0].firstName,
-                                        text:
-                                            "$remark-(${transactionItem.adminDetail[0].identity})",
-                                        textcolor: MyAppColor.textClor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600,
-                                      ),
+                                ),
+                                const VerticalDivider(
+                                  color: Colors.black,
+                                  thickness: 1,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.25,
+                                    child: TextWidget(
+                                      // Replace 'Name' with the actual property you want to display
+                                      // text: transactionItem.userDetail[0].firstName,
+                                      text:
+                                          "$remark-(${transactionItem.adminDetail[0].identity})",
+                                      textcolor: MyAppColor.textClor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600,
                                     ),
                                   ),
-                                  const VerticalDivider(
-                                    color: Colors.black,
-                                    thickness: 1,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
-                                      child: TextWidget(
-                                        // Replace 'Received' with the actual property you want to display
-                                        text: transactionType == "credit"
-                                            ? amount
-                                            : '',
-                                        textcolor: MyAppColor.greenColor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600,
-                                      ),
+                                ),
+                                const VerticalDivider(
+                                  color: Colors.black,
+                                  thickness: 1,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.25,
+                                    child: TextWidget(
+                                      // Replace 'Received' with the actual property you want to display
+                                      text: transactionType == "credit"
+                                          ? amount
+                                          : '',
+                                      textcolor: MyAppColor.greenColor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600,
                                     ),
                                   ),
-                                  const VerticalDivider(
-                                    color: Colors.black,
-                                    thickness: 1,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
-                                      child: TextWidget(
-                                        // Replace 'Given' with the actual property you want to display
-                                        text: transactionType == 'debit'
-                                            ? amount
-                                            : '',
-                                        textcolor: MyAppColor.redColor,
-                                        textsize: 12,
-                                        textweight: FontWeight.w600,
-                                      ),
+                                ),
+                                const VerticalDivider(
+                                  color: Colors.black,
+                                  thickness: 1,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.25,
+                                    child: TextWidget(
+                                      // Replace 'Given' with the actual property you want to display
+                                      text: transactionType == 'debit'
+                                          ? amount
+                                          : '',
+                                      textcolor: MyAppColor.redColor,
+                                      textsize: 12,
+                                      textweight: FontWeight.w600,
                                     ),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                ),
-              ],
-            )
-          ],
-        ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
