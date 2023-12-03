@@ -234,12 +234,18 @@ class _Recived2Entry2Screen2State extends State<Recived2Entry2Screen2> {
               height: 20,
             ),
             ElevatedButton(
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(MyAppColor.greyColor),
+              ),
               onPressed: () async {
                 final DateTime? pickedDate = await showDatePicker(
                   context: context,
-                  initialDate: selectedDate ?? DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
+                  initialDate: selectedDate ??
+                      DateTime.now().subtract(
+                          Duration(days: 1)), // Set to yesterday as an example
+                  firstDate:
+                      DateTime(2000), // Set a past date, e.g., the year 2000
+                  lastDate: DateTime.now(), // Allow dates up to today
                 );
 
                 if (pickedDate != null) {
@@ -252,7 +258,11 @@ class _Recived2Entry2Screen2State extends State<Recived2Entry2Screen2> {
                 selectedDate == null
                     ? 'Choose Date'
                     : ' ${DateFormat('yyyy-MM-dd').format(selectedDate!)}',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: MyAppColor.mainBlueColor,
+                  fontSize: 16,
+                ),
                 // If selectedDate is null, show 'Choose Date', otherwise show the formatted date
               ),
             ),
