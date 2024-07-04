@@ -113,6 +113,12 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
     return value;
   }
 
+  String formatTime(DateTime utcDate) {
+    final DateTime localDate = utcDate.toLocal();
+    final formattedTime = DateFormat('HH:mm').format(localDate);
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,16 +193,14 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: const TextWidget(
-                          text: 'Date',
-                          textcolor: Colors.white,
-                          textsize: 12,
-                          textweight: FontWeight.w600,
-                        ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width * 0.18,
+                      child: const TextWidget(
+                        text: 'Date',
+                        textcolor: Colors.white,
+                        textsize: 12,
+                        textweight: FontWeight.w600,
                       ),
                     ),
                     Expanded(
@@ -284,18 +288,28 @@ class _SearchDateScreenState extends State<SearchDateScreen> {
                                 : Colors.white,
                             child: Row(
                               children: [
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.30,
-                                    child: TextWidget(
-                                      text: DateFormat('yyyy-MM-dd')
-                                          .format(transactionItem.trnxDate),
-                                      textcolor: MyAppColor.textClor,
-                                      textsize: 10,
-                                      textweight: FontWeight.w600,
-                                    ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.18,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextWidget(
+                                        text: DateFormat('yyyy.MM.dd')
+                                            .format(transactionItem.trnxDate),
+                                        textcolor: MyAppColor.textClor,
+                                        textsize: 10,
+                                        textweight: FontWeight.w600,
+                                      ),
+                                      TextWidget(
+                                        text: formatTime(
+                                            transactionItem.trnxDate),
+                                        textcolor: MyAppColor.textClor,
+                                        textsize: 10,
+                                        textweight: FontWeight.w600,
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 const VerticalDivider(

@@ -528,13 +528,19 @@ class _Given2Entry2ScreenState extends State<Given2Entry2Screen> {
               textsize: 16,
               textweight: FontWeight.w600),
         ),
+        // Inside the onTap callback of the bottomNavigationBar GestureDetector
         onTap: () {
           final firstName = _givenFirstNameController.text;
           final lastName = _givenLastNameController.text;
           final amount = _amountController.text;
           final remark = _givenRemarkController.text;
 
-          if (_selectedOption == "New Entry" &&
+          if (selectedDate == null) {
+            // Show SnackBar if date is not selected
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Please select a date.')),
+            );
+          } else if (_selectedOption == "New Entry" &&
               firstName.isNotEmpty &&
               lastName.isNotEmpty &&
               remark.isNotEmpty &&

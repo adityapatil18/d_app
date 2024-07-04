@@ -35,7 +35,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
         .now()); // Fetch opening and closing balances for the current date
   }
 
-  String selectedDate = DateFormat('dd/MM/yy').format(DateTime.now());
+  String selectedDate = DateFormat('dd.MM.yy').format(DateTime.now());
   final TextStyle customTextStyle = const TextStyle(
     color: MyAppColor.mainBlueColor, // Set the text color to #2C1BEF
     fontWeight: FontWeight.bold, // Customize the font weight
@@ -81,6 +81,12 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
     value = value.replaceAll('₹', '');
 
     return value;
+  }
+
+  String formatTime(DateTime utcDate) {
+    final DateTime localDate = utcDate.toLocal();
+    final formattedTime = DateFormat('HH:mm').format(localDate);
+    return formattedTime;
   }
 
   @override
@@ -256,6 +262,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                       itemBuilder: (context, index) {
                         final transactionItem = date1!.data[index];
                         final transactionType = transactionItem.trnxType;
+                        final transactionTime = transactionItem.trnxDate;
                         final amount = removeCrSuffixAndRupeesSymbol(
                             transactionItem.amount);
                         final remark = transactionItem.remark;
@@ -278,11 +285,22 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                   alignment: Alignment.center,
                                   width:
                                       MediaQuery.sizeOf(context).width * 0.25,
-                                  child: TextWidget(
-                                      text: selectedDate,
-                                      textcolor: MyAppColor.textClor,
-                                      textsize: 10,
-                                      textweight: FontWeight.w700),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextWidget(
+                                          text: selectedDate,
+                                          textcolor: MyAppColor.textClor,
+                                          textsize: 10,
+                                          textweight: FontWeight.w700),
+                                      TextWidget(
+                                          text: formatTime(
+                                              transactionItem.trnxDate),
+                                          textcolor: MyAppColor.textClor,
+                                          textsize: 10,
+                                          textweight: FontWeight.w700),
+                                    ],
+                                  ),
                                 ),
                               ),
                               const VerticalDivider(

@@ -5,6 +5,7 @@ import 'package:android_intent_plus/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../../model/all_data.dart';
 import '../../model/get_all_data.dart';
@@ -46,27 +47,34 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
         allData = allDataList;
       });
     } else {
-      throw Exception('Failed to fetch data.');
+      'Failed to fetch data. Status Code: ${response.statusCode}';
     }
   }
 
   Future<void> fetchTransactionsForUser(String userId) async {
-    final response = await http.post(
-      Uri.parse('https://appapi.techgigs.in/api/transaction/getbyuser'),
-      body: {
-        'userId': userId,
-        "page": "1",
-        "limit": "500",
-      },
-    );
-    print("api response:$response");
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      setState(() {
-        transaction = transactionFromJson(jsonEncode(jsonData));
-      });
-    } else {
-      throw Exception('Failed to fetch transaction data.');
+    try {
+      final response = await http.post(
+        Uri.parse('https://appapi.techgigs.in/api/transaction/getbyuser'),
+        body: {
+          'userId': userId,
+          "page": "1",
+          "limit": "500",
+          "date": "",
+        },
+      );
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print("api response:$jsonData");
+
+        setState(() {
+          transaction = transactionFromJson(jsonEncode(jsonData));
+        });
+      } else {
+        throw Exception(
+            'Failed to transction data. Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
     }
   }
 
@@ -83,6 +91,12 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
     matchingNames.sort((a, b) => a.fullName.compareTo(b.fullName));
 
     return matchingNames;
+  }
+
+  String formatTime(DateTime utcDate) {
+    final DateTime localDate = utcDate.toLocal();
+    final formattedTime = DateFormat('HH:mm').format(localDate);
+    return formattedTime;
   }
 
   @override
@@ -153,17 +167,14 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Expanded(
-                          // flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            child: const TextWidget(
-                                text: 'Date',
-                                textcolor: Colors.white,
-                                textsize: 12,
-                                textweight: FontWeight.w600),
-                          ),
+                        Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width * 0.18,
+                          child: const TextWidget(
+                              text: 'Date',
+                              textcolor: Colors.white,
+                              textsize: 12,
+                              textweight: FontWeight.w600),
                         ),
                         // VerticalDivider(
                         //   thickness: 1,
@@ -279,17 +290,24 @@ class _SearchNameScreenState extends State<SearchNameScreen> {
                               : Colors.white,
                           child: Row(
                             children: [
-                              Expanded(
-                                // flex: 1,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.25,
-                                  child: TextWidget(
-                                      text: '${date}',
-                                      textcolor: MyAppColor.textClor,
-                                      textsize: 10,
-                                      textweight: FontWeight.w600),
+                              Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width * 0.18,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextWidget(
+                                        text: '${date.replaceAll('-', '.')}',
+                                        textcolor: MyAppColor.textClor,
+                                        textsize: 10,
+                                        textweight: FontWeight.w600),
+                                    TextWidget(
+                                        text: formatTime(
+                                            transactionItem.createdAt),
+                                        textcolor: MyAppColor.textClor,
+                                        textsize: 10,
+                                        textweight: FontWeight.w600),
+                                  ],
                                 ),
                               ),
                               const VerticalDivider(

@@ -70,6 +70,12 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
     return value;
   }
 
+  String formatTime(DateTime utcDate) {
+    final DateTime localDate = utcDate.toLocal();
+    final formattedTime = DateFormat('HH:mm').format(localDate);
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,17 +171,14 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.sizeOf(context).width * 0.25,
-                      child: const TextWidget(
-                          text: 'Date',
-                          textcolor: Colors.white,
-                          textsize: 12,
-                          textweight: FontWeight.w600),
-                    ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.18,
+                    child: const TextWidget(
+                        text: 'Date',
+                        textcolor: Colors.white,
+                        textsize: 12,
+                        textweight: FontWeight.w600),
                   ),
                   Expanded(
                     // flex: 1,
@@ -250,16 +253,26 @@ class _AddOldEntryScreenState extends State<AddOldEntryScreen> {
                     color: index.isEven ? MyAppColor.grey2Color : Colors.white,
                     child: Row(
                       children: [
-                        Expanded(
-                          // flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.sizeOf(context).width * 0.25,
-                            child: TextWidget(
-                                text: selectedDate.toString().substring(0, 10),
-                                textcolor: MyAppColor.textClor,
-                                textsize: 10,
-                                textweight: FontWeight.w700),
+                        Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width * 0.18,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextWidget(
+                                  text: selectedDate
+                                      .toString()
+                                      .substring(0, 10)
+                                      .replaceAll("-", "."),
+                                  textcolor: MyAppColor.textClor,
+                                  textsize: 10,
+                                  textweight: FontWeight.w700),
+                              TextWidget(
+                                  text: formatTime(transactionItem.trnxDate),
+                                  textcolor: MyAppColor.textClor,
+                                  textsize: 10,
+                                  textweight: FontWeight.w700),
+                            ],
                           ),
                         ),
                         const VerticalDivider(
